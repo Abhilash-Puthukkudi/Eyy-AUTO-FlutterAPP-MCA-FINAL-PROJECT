@@ -19,7 +19,7 @@ the driver by cash or UPI after their journey. The driver can accept trip reques
 passenger. The application will let the passenger know when the auto has arrived at the
 location and will start the trip once the passenger is on board and will end the trip once the
 passenger arrived at the destination.
-2
+
 </h3>
 <p align="left">
 </p>
@@ -34,15 +34,5 @@ passenger arrived at the destination.
 
 
 
-The aim is to develop a location-based auto-rickshaw booking android application
-called ”Eyy-AUTO” that simply connects the user to the nearest available auto driver. Pas-
-sengers can request a ride by choosing the destination on the application, know the distance
-and fare for the destination and can go anywhere with flat fares. Passengers can track the
-live status of the requested auto thorough out the journey through this the passenger will
-be able to track their trip real-time basis which ensures the safety of the passenger. The
-application will share the driver and vehicle details with the passenger. Passengers can pay
-the driver by cash or UPI after their journey. The driver can accept trip requests from the
-passenger. The application will let the passenger know when the auto has arrived at the
-location and will start the trip once the passenger is on board and will end the trip once the
-passenger arrived at the destination.
+
 
