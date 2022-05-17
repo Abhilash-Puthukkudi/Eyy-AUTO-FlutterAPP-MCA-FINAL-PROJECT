@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:passenger/AllScreens/registrationScreen.dart';
+import 'package:passenger/allwidgets/progressWidget.dart';
 import 'package:passenger/functions/firebaseReferances.dart';
 import 'package:passenger/functions/validators.dart';
 
@@ -142,6 +143,13 @@ class _loginScreenState extends State<loginScreen> {
 
   void loginPassenger(
       BuildContext context, String username, String password) async {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return progressBar("Loging In Please wait");
+        });
+
     try {
       final User? firebaseuser = (await _firebaseAuth
               .signInWithEmailAndPassword(email: username, password: password))
@@ -151,17 +159,22 @@ class _loginScreenState extends State<loginScreen> {
       if (firebaseuser != null) {
         passengerRef.child(firebaseuser.uid).once().then((value) => {
               if (value.snapshot.value != null)
-                {greenMessenger(context, "poi kednn orang")}
+                {
+                  Navigator.pop(context),
+                  greenMessenger(context, "poi kednn orang")
+                }
               else
                 {
                   _firebaseAuth.signOut(),
                   // add code to delete the auth deatils later
+                  Navigator.pop(context),
                   redMessenger(context, "no data exists in database")
                 }
             });
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
+        Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               backgroundColor: Colors.red,
@@ -169,6 +182,7 @@ class _loginScreenState extends State<loginScreen> {
         );
         log('No user found for that email.');
       } else if (e.code == 'wrong-password') {
+        Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               backgroundColor: Colors.deepOrange,
