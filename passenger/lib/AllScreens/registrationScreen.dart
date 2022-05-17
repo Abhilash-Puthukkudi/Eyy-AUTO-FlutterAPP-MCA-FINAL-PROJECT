@@ -8,7 +8,12 @@ class registrationScreen extends StatefulWidget {
   static const String idScreen = "register";
 //--- page routes end ---
 
-//---- Text editing controllers start-----
+  @override
+  State<registrationScreen> createState() => _registrationScreenState();
+}
+
+class _registrationScreenState extends State<registrationScreen> {
+  //---- Text editing controllers start-----
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
@@ -17,11 +22,6 @@ class registrationScreen extends StatefulWidget {
 
 //---- Text editing controllers stop-----
 
-  @override
-  State<registrationScreen> createState() => _registrationScreenState();
-}
-
-class _registrationScreenState extends State<registrationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,6 +51,7 @@ class _registrationScreenState extends State<registrationScreen> {
                 children: [
                   SizedBox(height: 1.0),
                   TextField(
+                    controller: nameController,
                     style: TextStyle(color: Colors.yellow, fontSize: 18),
                     textAlign: TextAlign.center,
                     keyboardType: TextInputType.name,
