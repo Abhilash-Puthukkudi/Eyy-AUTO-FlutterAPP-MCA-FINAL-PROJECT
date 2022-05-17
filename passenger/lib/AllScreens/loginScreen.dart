@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:passenger/AllScreens/registrationScreen.dart';
+import 'package:passenger/functions/validators.dart';
 
 class loginScreen extends StatefulWidget {
   const loginScreen({Key? key}) : super(key: key);
@@ -12,6 +13,12 @@ class loginScreen extends StatefulWidget {
 }
 
 class _loginScreenState extends State<loginScreen> {
+  //text editing controllers
+
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  //
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,6 +48,7 @@ class _loginScreenState extends State<loginScreen> {
                 children: [
                   SizedBox(height: 1.0),
                   TextField(
+                    controller: usernameController,
                     style: TextStyle(color: Colors.yellow, fontSize: 18),
                     textAlign: TextAlign.center,
                     keyboardType: TextInputType.emailAddress,
@@ -57,6 +65,7 @@ class _loginScreenState extends State<loginScreen> {
                   ),
                   SizedBox(height: 5.0),
                   TextField(
+                    controller: passwordController,
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.yellow, fontSize: 18),
                     obscureText: true,
@@ -74,10 +83,21 @@ class _loginScreenState extends State<loginScreen> {
                         shape:
                             MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0),
+                                    borderRadius: BorderRadius.circular(50.0),
                                     side: BorderSide(
                                         color: Color.fromARGB(255, 8, 7, 7))))),
-                    onPressed: () {},
+                    onPressed: () {
+                      if (usernameController.text.isEmpty) {
+                        redMessenger(context, "Enter Username  to login!");
+                      } else if (passwordController.text.isEmpty) {
+                        redMessenger(context, "Enter Password to login!");
+                      } else {
+                        String username = usernameController.text.trim();
+                        String password = passwordController.text.trim();
+                        //login function
+                        loginPassenger(context, username, password);
+                      }
+                    },
                     child: Container(
                       height: 50,
                       child: Center(
@@ -109,5 +129,9 @@ class _loginScreenState extends State<loginScreen> {
         ),
       ),
     );
+  }
+
+  void loginPassenger(BuildContext context, String username, String password) {
+    
   }
 }
