@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:passenger/AllScreens/mainScreen.dart';
 import 'package:passenger/AllScreens/registrationScreen.dart';
 import 'package:passenger/allwidgets/progressWidget.dart';
 import 'package:passenger/functions/firebaseReferances.dart';
@@ -161,7 +162,9 @@ class _loginScreenState extends State<loginScreen> {
               if (value.snapshot.value != null)
                 {
                   Navigator.pop(context),
-                  greenMessenger(context, "poi kednn orang")
+                  greenMessenger(context, "Welcome..!"),
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, mainScreen.idScreen, (route) => false)
                 }
               else
                 {
