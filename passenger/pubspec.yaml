@@ -29,6 +29,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  firebase_core: ^1.17.0
+  firebase_auth: ^3.3.18
+  firebase_database: ^9.0.14  
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -38,6 +41,11 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  icons_launcher: ^1.1.8
+
+flutter_icons:
+  image_path: 'assets/icon.png'
+  android: true    
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
