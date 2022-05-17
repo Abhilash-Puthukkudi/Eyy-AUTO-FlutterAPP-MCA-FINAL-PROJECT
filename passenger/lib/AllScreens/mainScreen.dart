@@ -12,6 +12,9 @@ class mainScreen extends StatefulWidget {
 class _mainScreenState extends State<mainScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      child: Center(
+          child: Text("please wait this feature will be comming soon..!")),
+    );
   }
 }
