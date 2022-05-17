@@ -1,5 +1,9 @@
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:passenger/AllScreens/loginScreen.dart';
+import 'package:passenger/functions/firebaseReferances.dart';
 import 'package:passenger/functions/validators.dart';
 
 class registrationScreen extends StatefulWidget {
@@ -140,6 +144,14 @@ class _registrationScreenState extends State<registrationScreen> {
                             context, "Please enter a valid email address");
                       } else if (passwordController.text.length < 5) {
                         redMessenger(context, "Enter a Strong password");
+                      } else {
+                        String email = emailController.text.trim();
+                        String password = passwordController.text.trim();
+                        String phonenumber = phoneController.text.trim();
+                        String name = nameController.text.trim();
+
+                        registerUser(
+                            context, email, password, phonenumber, name);
                       }
                     },
                     child: Container(
@@ -173,5 +185,53 @@ class _registrationScreenState extends State<registrationScreen> {
         ),
       ),
     );
+  }
+
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
+  void registerUser(BuildContext context, String email, String password,
+      String phonenumber, String name) async {
+    try {
+      final User? firebaseUser = (await _firebaseAuth
+              .createUserWithEmailAndPassword(email: email, password: password))
+          .user;
+
+      if (firebaseUser != null) {
+        // user created
+
+        Map PassengerDataMap = {
+          "name": name,
+          "phone": phonenumber,
+          "email": email
+        };
+
+        passengerRef.child(firebaseUser.uid).set(PassengerDataMap);
+        greenMessenger(context,
+            "Congratulations your account has been created sucessfully. Please login to continue.");
+        Navigator.pushNamedAndRemoveUntil(
+            context, loginScreen.idScreen, (route) => false);
+      } else {
+        redMessenger(context, "New passenger account not created");
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              backgroundColor: Colors.red,
+              content: Text("The password provided is too weak.")),
+        );
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              backgroundColor: Colors.red,
+              content: Text("The account already exists for that email.")),
+        );
+      } else {
+        log(e.toString());
+      }
+    } catch (e) {
+      log(e.toString());
+    }
   }
 }
