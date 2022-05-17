@@ -68,6 +68,7 @@ class _registrationScreenState extends State<registrationScreen> {
                   ),
                   SizedBox(height: 5.0),
                   TextField(
+                    controller: phoneController,
                     style: TextStyle(color: Colors.yellow, fontSize: 18),
                     textAlign: TextAlign.center,
                     keyboardType: TextInputType.phone,
@@ -84,6 +85,7 @@ class _registrationScreenState extends State<registrationScreen> {
                   ),
                   SizedBox(height: 5.0),
                   TextField(
+                    controller: emailController,
                     style: TextStyle(color: Colors.yellow, fontSize: 18),
                     textAlign: TextAlign.center,
                     keyboardType: TextInputType.emailAddress,
@@ -101,6 +103,7 @@ class _registrationScreenState extends State<registrationScreen> {
                   SizedBox(height: 5.0),
                   SizedBox(height: 5.0),
                   TextField(
+                    controller: passwordController,
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.yellow, fontSize: 18),
                     obscureText: true,
