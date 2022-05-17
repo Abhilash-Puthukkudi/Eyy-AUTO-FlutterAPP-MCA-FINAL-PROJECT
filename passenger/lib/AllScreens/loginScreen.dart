@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:passenger/AllScreens/registrationScreen.dart';
 
 class loginScreen extends StatefulWidget {
   const loginScreen({Key? key}) : super(key: key);
@@ -92,7 +93,10 @@ class _loginScreenState extends State<loginScreen> {
               ),
             ),
             TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, registrationScreen.idScreen, (route) => false);
+                },
                 child: Text(
                   "Do not have an Account? Register Here.",
                   style: TextStyle(
