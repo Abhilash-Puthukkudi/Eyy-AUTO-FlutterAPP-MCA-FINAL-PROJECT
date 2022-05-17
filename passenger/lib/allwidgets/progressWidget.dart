@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 
-class progressBar extends StatelessWidget {
+class progressBar extends StatefulWidget {
   String message;
   progressBar(this.message);
+
+  @override
+  State<progressBar> createState() => _progressBarState();
+}
+
+class _progressBarState extends State<progressBar> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -26,7 +32,7 @@ class progressBar extends StatelessWidget {
               ),
               SizedBox(width: 26.0),
               Text(
-                message,
+                widget.message,
                 style: TextStyle(color: Colors.white),
               )
             ],
