@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:passenger/AllScreens/loginScreen.dart';
+import 'package:passenger/AllScreens/mainScreen.dart';
 import 'package:passenger/AllScreens/registrationScreen.dart';
 import 'firebase_options.dart';
 
@@ -24,7 +25,12 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(primarySwatch: Colors.yellow),
-      home: registrationScreen(),
+      initialRoute: loginScreen.idScreen,
+      routes: {
+        registrationScreen.idScreen: (context) => registrationScreen(),
+        loginScreen.idScreen: (context) => loginScreen(),
+        mainScreen.idScreen: (context) => mainScreen()
+      },
     );
   }
 }

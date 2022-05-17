@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 class loginScreen extends StatefulWidget {
   const loginScreen({Key? key}) : super(key: key);
 
+  static const String idScreen = "login";
+
   @override
   State<loginScreen> createState() => _loginScreenState();
 }

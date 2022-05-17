@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 class registrationScreen extends StatefulWidget {
   const registrationScreen({Key? key}) : super(key: key);
 
+  static const String idScreen = "register";
+
   @override
   State<registrationScreen> createState() => _registrationScreenState();
 }
