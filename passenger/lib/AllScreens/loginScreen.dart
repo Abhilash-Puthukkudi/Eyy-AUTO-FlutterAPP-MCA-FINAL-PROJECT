@@ -1,6 +1,11 @@
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:passenger/AllScreens/registrationScreen.dart';
+import 'package:passenger/functions/firebaseReferances.dart';
 import 'package:passenger/functions/validators.dart';
 
 class loginScreen extends StatefulWidget {
@@ -95,6 +100,8 @@ class _loginScreenState extends State<loginScreen> {
                         String username = usernameController.text.trim();
                         String password = passwordController.text.trim();
                         //login function
+                        log(username.toString());
+                        log(password.toString());
                         loginPassenger(context, username, password);
                       }
                     },
@@ -131,7 +138,43 @@ class _loginScreenState extends State<loginScreen> {
     );
   }
 
-  void loginPassenger(BuildContext context, String username, String password) {
-    
+  FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
+  void loginPassenger(
+      BuildContext context, String username, String password) async {
+    try {
+      final User? firebaseuser = (await _firebaseAuth
+              .signInWithEmailAndPassword(email: username, password: password))
+          .user;
+      log("here reached");
+
+      if (firebaseuser != null) {
+        passengerRef.child(firebaseuser.uid).once().then((value) => {
+              if (value.snapshot.value != null)
+                {greenMessenger(context, "poi kednn orang")}
+              else
+                {
+                  _firebaseAuth.signOut(),
+                  // add code to delete the auth deatils later
+                  redMessenger(context, "no data exists in database")
+                }
+            });
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              backgroundColor: Colors.red,
+              content: Text("No user found for that email..")),
+        );
+        log('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              backgroundColor: Colors.deepOrange,
+              content: Text("Wrong password provided for that user.")),
+        );
+      }
+    }
   }
 }
