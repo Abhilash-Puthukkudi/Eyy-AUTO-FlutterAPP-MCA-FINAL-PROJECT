@@ -4,7 +4,18 @@ import 'package:passenger/AllScreens/loginScreen.dart';
 class registrationScreen extends StatefulWidget {
   const registrationScreen({Key? key}) : super(key: key);
 
+//--- page routes start---
   static const String idScreen = "register";
+//--- page routes end ---
+
+//---- Text editing controllers start-----
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+//---- Text editing controllers stop-----
 
   @override
   State<registrationScreen> createState() => _registrationScreenState();
