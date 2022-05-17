@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:passenger/AllScreens/loginScreen.dart';
+import 'package:passenger/allwidgets/progressWidget.dart';
 import 'package:passenger/functions/firebaseReferances.dart';
 import 'package:passenger/functions/validators.dart';
 
@@ -191,6 +192,13 @@ class _registrationScreenState extends State<registrationScreen> {
 
   void registerUser(BuildContext context, String email, String password,
       String phonenumber, String name) async {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return progressBar("Registering.. please wait.");
+        });
+
     try {
       final User? firebaseUser = (await _firebaseAuth
               .createUserWithEmailAndPassword(email: email, password: password))
@@ -206,15 +214,18 @@ class _registrationScreenState extends State<registrationScreen> {
         };
 
         passengerRef.child(firebaseUser.uid).set(PassengerDataMap);
+        Navigator.pop(context);
         greenMessenger(context,
             "Congratulations your account has been created sucessfully. Please login to continue.");
         Navigator.pushNamedAndRemoveUntil(
             context, loginScreen.idScreen, (route) => false);
       } else {
+        Navigator.pop(context);
         redMessenger(context, "New passenger account not created");
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
+        Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               backgroundColor: Colors.red,
@@ -222,6 +233,7 @@ class _registrationScreenState extends State<registrationScreen> {
         );
         print('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
+        Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               backgroundColor: Colors.red,
