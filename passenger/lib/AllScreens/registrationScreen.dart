@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:passenger/AllScreens/loginScreen.dart';
+import 'package:passenger/functions/validators.dart';
 
 class registrationScreen extends StatefulWidget {
   const registrationScreen({Key? key}) : super(key: key);
@@ -124,7 +125,23 @@ class _registrationScreenState extends State<registrationScreen> {
                                     borderRadius: BorderRadius.circular(18.0),
                                     side: BorderSide(
                                         color: Color.fromARGB(255, 8, 7, 7))))),
-                    onPressed: () {},
+                    onPressed: () {
+                      if (nameController.text.length < 4) {
+                        redMessenger(
+                            context, "Name must be atleast 3 charcters!");
+                      } else if (nameController.text.length > 20) {
+                        redMessenger(
+                            context, "Maximum name characters are 20!");
+                      } else if (phoneController.text.length != 10) {
+                        redMessenger(context, "Enter a valid Phonenumber!");
+                      } else if (!RegExp(r'\S+@\S+\.\S+')
+                          .hasMatch(emailController.text)) {
+                        redMessenger(
+                            context, "Please enter a valid email address");
+                      } else if (passwordController.text.length < 5) {
+                        redMessenger(context, "Enter a Strong password");
+                      }
+                    },
                     child: Container(
                       height: 50,
                       child: Center(
