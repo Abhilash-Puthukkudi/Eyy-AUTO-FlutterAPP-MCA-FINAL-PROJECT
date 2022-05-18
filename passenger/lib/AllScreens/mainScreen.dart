@@ -38,7 +38,33 @@ class _mainScreenState extends State<mainScreen> {
               newGoogleMapController = controller;
             },
           ),
-          Container(),
+          Positioned(
+            top: 45.0,
+            left: 22.0,
+            child: GestureDetector(
+              onTap: () {},
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.yellow,
+                    borderRadius: BorderRadius.circular(22.0),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.black,
+                          blurRadius: 6.0,
+                          spreadRadius: 0.5,
+                          offset: Offset(0.7, 0.7))
+                    ]),
+                child: CircleAvatar(
+                  backgroundColor: Colors.yellow,
+                  child: Icon(
+                    Icons.menu,
+                    color: Colors.black,
+                  ),
+                  radius: 20.0,
+                ),
+              ),
+            ),
+          ),
           Positioned(
               left: 0.0,
               right: 0.0,
