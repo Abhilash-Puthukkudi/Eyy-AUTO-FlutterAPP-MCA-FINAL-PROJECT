@@ -16,6 +16,11 @@ class mainScreen extends StatefulWidget {
 class _mainScreenState extends State<mainScreen> {
   Completer<GoogleMapController> _controllerGoogleMap = Completer();
 
+// geolocation block
+
+//
+
+// google map camera postion
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
@@ -26,7 +31,6 @@ class _mainScreenState extends State<mainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("main screen")),
       body: Stack(
         children: [
           GoogleMap(
@@ -39,7 +43,7 @@ class _mainScreenState extends State<mainScreen> {
             },
           ),
           Positioned(
-            top: 45.0,
+            top: 50.0,
             left: 22.0,
             child: GestureDetector(
               onTap: () {},
