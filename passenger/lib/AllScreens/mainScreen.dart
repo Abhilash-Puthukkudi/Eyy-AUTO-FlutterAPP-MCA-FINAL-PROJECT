@@ -33,6 +33,7 @@ class _mainScreenState extends State<mainScreen> {
             initialCameraPosition: _kGooglePlex,
             onMapCreated: (GoogleMapController controller) {
               _controllerGoogleMap.complete(controller);
+              newGoogleMapcontroller = controller;
             },
           )
         ],
