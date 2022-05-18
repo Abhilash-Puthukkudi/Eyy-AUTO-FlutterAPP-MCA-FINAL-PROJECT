@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -15,6 +16,8 @@ class mainScreen extends StatefulWidget {
 
 class _mainScreenState extends State<mainScreen> {
   Completer<GoogleMapController> _controllerGoogleMap = Completer();
+
+  double BottompaddingOfMap = 0.0;
 
 // geolocation block
   Position? currentPostiion;
@@ -51,9 +54,13 @@ class _mainScreenState extends State<mainScreen> {
       body: Stack(
         children: [
           GoogleMap(
+            padding: EdgeInsets.only(bottom: BottompaddingOfMap),
             initialCameraPosition: _kGooglePlex,
             mapType: MapType.normal,
             myLocationButtonEnabled: true,
+            myLocationEnabled: true,
+            zoomGesturesEnabled: true,
+            zoomControlsEnabled: true,
             onMapCreated: (GoogleMapController controller) {
               _controllerGoogleMap.complete(controller);
               newGoogleMapController = controller;
@@ -61,6 +68,10 @@ class _mainScreenState extends State<mainScreen> {
               // locate position starts
               locateposition();
               // locate position block ends
+
+              //  padding
+              BottompaddingOfMap = 265.0;
+              //
             },
           ),
           Positioned(
