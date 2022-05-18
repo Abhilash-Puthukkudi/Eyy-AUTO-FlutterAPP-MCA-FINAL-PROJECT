@@ -38,6 +38,7 @@ class _mainScreenState extends State<mainScreen> {
               newGoogleMapController = controller;
             },
           ),
+          Container(),
           Positioned(
               left: 0.0,
               right: 0.0,
