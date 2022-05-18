@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class mainScreen extends StatefulWidget {
@@ -16,6 +17,23 @@ class _mainScreenState extends State<mainScreen> {
   Completer<GoogleMapController> _controllerGoogleMap = Completer();
 
 // geolocation block
+  Position? currentPostiion;
+
+  var geoLocator = Geolocator();
+
+  void locateposition() async {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    currentPostiion = position;
+
+    LatLng latLngPosition = LatLng(position.latitude, position.longitude);
+
+    CameraPosition cameraPosition =
+        new CameraPosition(target: latLngPosition, zoom: 14);
+
+    newGoogleMapController!
+        .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+  }
 
 //
 
