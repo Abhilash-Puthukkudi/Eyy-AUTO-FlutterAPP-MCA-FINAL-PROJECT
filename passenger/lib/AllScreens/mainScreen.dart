@@ -13,27 +13,28 @@ class mainScreen extends StatefulWidget {
 }
 
 class _mainScreenState extends State<mainScreen> {
-  @override
   Completer<GoogleMapController> _controllerGoogleMap = Completer();
-
-  GoogleMapController? newGoogleMapcontroller;
 
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
   );
 
+  GoogleMapController? newGoogleMapController;
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text("main screen")),
       body: Stack(
         children: [
           GoogleMap(
+            initialCameraPosition: _kGooglePlex,
             mapType: MapType.normal,
             myLocationButtonEnabled: true,
-            initialCameraPosition: _kGooglePlex,
             onMapCreated: (GoogleMapController controller) {
               _controllerGoogleMap.complete(controller);
-              newGoogleMapcontroller = controller;
+              newGoogleMapController = controller;
             },
           )
         ],

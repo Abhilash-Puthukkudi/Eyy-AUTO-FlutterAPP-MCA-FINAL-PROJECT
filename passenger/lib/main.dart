@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(primarySwatch: Colors.yellow),
-      initialRoute: loginScreen.idScreen,
+      initialRoute: mainScreen.idScreen,
       routes: {
         registrationScreen.idScreen: (context) => registrationScreen(),
         loginScreen.idScreen: (context) => loginScreen(),
