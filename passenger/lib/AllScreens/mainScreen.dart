@@ -57,6 +57,10 @@ class _mainScreenState extends State<mainScreen> {
             onMapCreated: (GoogleMapController controller) {
               _controllerGoogleMap.complete(controller);
               newGoogleMapController = controller;
+
+              // locate position starts
+              locateposition();
+              // locate position block ends
             },
           ),
           Positioned(
