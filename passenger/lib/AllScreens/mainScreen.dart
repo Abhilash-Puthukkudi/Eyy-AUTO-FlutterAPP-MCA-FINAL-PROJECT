@@ -80,7 +80,7 @@ class _mainScreenState extends State<mainScreen> {
                 // locate position block ends
 
                 //  padding
-                BottompaddingOfMap = 265.0;
+                BottompaddingOfMap = 240.0;
                 //
               },
             ),
