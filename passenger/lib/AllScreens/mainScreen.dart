@@ -4,7 +4,9 @@ import 'dart:developer' as d;
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:passenger/DataHandler/appData.dart';
 import 'package:passenger/assistance/assistanceMethods.dart';
+import 'package:provider/provider.dart';
 
 class mainScreen extends StatefulWidget {
   const mainScreen({Key? key}) : super(key: key);
@@ -175,6 +177,36 @@ class _mainScreenState extends State<mainScreen> {
                               ],
                             ),
                           ),
+                        ),
+                        SizedBox(
+                          height: 24.0,
+                        ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.location_pin,
+                              color: Colors.green,
+                            ),
+                            SizedBox(
+                              width: 24.0,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  Provider.of<appData>(context)
+                                              .pickUpLocation !=
+                                          null
+                                      ? Provider.of<appData>(context)
+                                          .pickUpLocation!
+                                          .placeName
+                                          .toString()
+                                      : "Fetching pickup Location",
+                                  overflow: TextOverflow.visible,
+                                )
+                              ],
+                            ),
+                          ],
                         )
                       ],
                     ),

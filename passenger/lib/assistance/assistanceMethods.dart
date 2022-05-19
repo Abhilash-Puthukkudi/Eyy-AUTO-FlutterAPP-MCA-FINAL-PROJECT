@@ -1,8 +1,6 @@
-import 'dart:convert';
-import 'dart:js';
+import 'dart:developer';
 
 import 'package:geolocator/geolocator.dart';
-import 'package:http/http.dart' as http;
 import 'package:passenger/DataHandler/appData.dart';
 import 'package:passenger/assistance/requestAssistance.dart';
 import 'package:passenger/functions/configMaps.dart';
@@ -17,17 +15,22 @@ class assistanceMethods {
 
     String url =
         "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=$mapkey";
-
+    log(url);
     var response = await requestAssistant.getRequest(url);
 
     if (response != "failed") {
-      // placeAddress = response["results"][0]["formatted_address"];
-      st1 = response["results"][0]["address_components"][0]["long_name"]; //3
-      st2 = response["results"][0]["address_components"][1]["long_name"]; //4
-      st3 = response["results"][0]["address_components"][5]["long_name"];
-      st4 = response["results"][0]["address_components"][6]["long_name"];
+      String res = response["results"][3]["formatted_address"];
 
-      placeAddress = st1 + "," + st2 + "," + st3 + "," + st4;
+      List placeAddressList = res.split(",");
+
+      placeAddress = placeAddressList[0] + " , " + placeAddressList[1];
+
+      // st1 = response["results"][0]["address_components"][2]["long_name"]; //3
+      // st2 = response["results"][0]["address_components"][4]["long_name"]; //4
+      // st3 = response["results"][0]["address_components"][5]["long_name"];
+      // st4 = response["results"][0]["address_components"][6]["long_name"];
+
+      // placeAddress = st1 + "," + st2 + "," + st3;
 
       Address passengerPickupadress = new Address();
       passengerPickupadress.longitude = position.latitude;
