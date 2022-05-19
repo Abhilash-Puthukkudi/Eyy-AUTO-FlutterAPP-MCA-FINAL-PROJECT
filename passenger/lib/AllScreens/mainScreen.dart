@@ -38,7 +38,8 @@ class _mainScreenState extends State<mainScreen> {
     newGoogleMapController!
         .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
 
-    String address = await assistanceMethods.searchCordinateAddress(position);
+    String address =
+        await assistanceMethods.searchCordinateAddress(position, context);
 
     print("adress is $address");
     d.log(address);
