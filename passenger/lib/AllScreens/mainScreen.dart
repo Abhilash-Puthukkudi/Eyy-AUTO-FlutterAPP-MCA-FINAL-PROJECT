@@ -171,7 +171,7 @@ class _mainScreenState extends State<mainScreen> {
                                 ),
                                 Text(
                                   "Search Destination",
-                                )
+                                ),
                               ],
                             ),
                           ),

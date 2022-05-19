@@ -13,6 +13,7 @@ class assistanceMethods {
   static Future<String> searchCordinateAddress(
       Position position, context) async {
     String placeAddress = '';
+    String st1, st2, st3, st4;
 
     String url =
         "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=$mapkey";
@@ -21,8 +22,12 @@ class assistanceMethods {
 
     if (response != "failed") {
       // placeAddress = response["results"][0]["formatted_address"];
-      placeAddress =
-          response["results"][0]["address_components"][0]["long_name"];
+      st1 = response["results"][0]["address_components"][0]["long_name"]; //3
+      st2 = response["results"][0]["address_components"][1]["long_name"]; //4
+      st3 = response["results"][0]["address_components"][5]["long_name"];
+      st4 = response["results"][0]["address_components"][6]["long_name"];
+
+      placeAddress = st1 + "," + st2 + "," + st3 + "," + st4;
 
       Address passengerPickupadress = new Address();
       passengerPickupadress.longitude = position.latitude;
