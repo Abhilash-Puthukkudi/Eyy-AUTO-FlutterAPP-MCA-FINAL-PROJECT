@@ -11,7 +11,7 @@ class assistanceMethods {
   static Future<String> searchCordinateAddress(
       Position position, context) async {
     String placeAddress = '';
-    String st1, st2, st3, st4;
+    // String st1, st2, st3, st4;
 
     String url =
         "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=$mapkey";

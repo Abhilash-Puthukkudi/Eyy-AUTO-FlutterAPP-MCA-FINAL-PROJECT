@@ -1,9 +1,8 @@
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
+
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:passenger/AllScreens/mainScreen.dart';
 import 'package:passenger/AllScreens/registrationScreen.dart';
 import 'package:passenger/allwidgets/progressWidget.dart';
