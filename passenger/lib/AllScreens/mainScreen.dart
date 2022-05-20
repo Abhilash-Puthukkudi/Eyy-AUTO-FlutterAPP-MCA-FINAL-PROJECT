@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:developer' as d;
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:passenger/DataHandler/appData.dart';
 import 'package:passenger/assistance/assistanceMethods.dart';
@@ -34,7 +36,7 @@ class _mainScreenState extends State<mainScreen> {
     LatLng latLngPosition = LatLng(position.latitude, position.longitude);
 
     CameraPosition cameraPosition =
-        new CameraPosition(target: latLngPosition, zoom: 18);
+        new CameraPosition(target: latLngPosition, zoom: 15);
 
     newGoogleMapController!
         .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
@@ -100,7 +102,7 @@ class _mainScreenState extends State<mainScreen> {
                             offset: Offset(0.7, 0.7))
                       ]),
                   child: CircleAvatar(
-                    backgroundColor: Colors.yellow,
+                    backgroundColor: Color.fromRGBO(252, 249, 64, 1),
                     child: Icon(
                       Icons.menu,
                       color: Colors.black,
@@ -115,7 +117,7 @@ class _mainScreenState extends State<mainScreen> {
                 right: 0.0,
                 bottom: 0.0,
                 child: Container(
-                  height: 200.0,
+                  height: 230.0,
                   decoration: BoxDecoration(
                       color: Color.fromRGBO(252, 249, 64, 1),
                       borderRadius: BorderRadius.only(
@@ -132,13 +134,15 @@ class _mainScreenState extends State<mainScreen> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 24.0, vertical: 18.0),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
                           height: 6.0,
                         ),
                         Text(
                           "Hi There, ",
-                          style: TextStyle(fontSize: 15.0),
+                          style: TextStyle(
+                              fontSize: 15.0, fontFamily: "Brand Bold"),
                         ),
                         Text(
                           "Where are you going ? ",
@@ -180,6 +184,9 @@ class _mainScreenState extends State<mainScreen> {
                         SizedBox(
                           height: 24.0,
                         ),
+                        Divider(
+                          thickness: 1,
+                        ),
                         Row(
                           children: [
                             Icon(
@@ -187,7 +194,7 @@ class _mainScreenState extends State<mainScreen> {
                               color: Colors.green,
                             ),
                             SizedBox(
-                              width: 24.0,
+                              width: 20.0,
                             ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -202,6 +209,9 @@ class _mainScreenState extends State<mainScreen> {
                                           .toString()
                                       : "Fetching pickup Location",
                                   overflow: TextOverflow.visible,
+                                  style: GoogleFonts.lato(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500),
                                 )
                               ],
                             ),
