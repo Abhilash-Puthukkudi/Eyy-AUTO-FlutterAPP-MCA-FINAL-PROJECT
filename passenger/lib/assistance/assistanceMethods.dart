@@ -19,7 +19,7 @@ class assistanceMethods {
     var response = await requestAssistant.getRequest(url);
 
     if (response != "failed") {
-      String res = response["results"][3]["formatted_address"];
+      String res = response["results"][0]["formatted_address"];
 
       List placeAddressList = res.split(",");
 

@@ -4,6 +4,7 @@ import 'package:passenger/AllScreens/loginScreen.dart';
 import 'package:passenger/AllScreens/mainScreen.dart';
 import 'package:passenger/AllScreens/registrationScreen.dart';
 import 'package:passenger/DataHandler/appData.dart';
+import 'package:passenger/functions/permissions.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
@@ -16,17 +17,29 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    listenforpermissions();
+    super.initState();
+  }
+
+  // This widget is the root of passenger application.
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => appData(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
+        title: 'Eyy-AUTO Passenger',
         theme: ThemeData(primarySwatch: Colors.yellow),
         initialRoute: loginScreen.idScreen,
         routes: {
