@@ -34,7 +34,11 @@ class _searchScreenState extends State<searchScreen> {
                   ),
                   Stack(
                     children: [
-                      Icon(Icons.arrow_back),
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Icon(Icons.arrow_back)),
                       Center(
                         child: Text(
                           "Choose Destination",
