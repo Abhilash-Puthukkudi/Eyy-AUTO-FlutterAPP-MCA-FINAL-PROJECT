@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:passenger/DataHandler/appData.dart';
 import 'package:passenger/allwidgets/dividerWidget.dart';
+import 'package:passenger/allwidgets/progressWidget.dart';
 import 'package:passenger/assistance/requestAssistance.dart';
 import 'package:passenger/functions/configMaps.dart';
 import 'package:passenger/models/address.dart';
@@ -249,10 +250,18 @@ class predictionTile extends StatelessWidget {
   }
 
   void getplaceDetails(String placeID, context) async {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) =>
+            progressBar("Setting The Destination.."));
+
     String placeDetailsURL =
         "https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeID&key=$mapkey";
 
     var res = await requestAssistant.getRequest(placeDetailsURL);
+
+    //disabling the progress bar
+    Navigator.pop(context);
 
     if (res == "failed") {
       return;
