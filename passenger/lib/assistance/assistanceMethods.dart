@@ -1,6 +1,8 @@
 import 'dart:developer';
 
+import 'package:flutter/rendering.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:passenger/DataHandler/appData.dart';
 import 'package:passenger/assistance/requestAssistance.dart';
 import 'package:passenger/functions/configMaps.dart';
@@ -42,5 +44,11 @@ class assistanceMethods {
     }
 
     return placeAddress;
+  }
+
+  void obtainPlaceDirectionDetails(
+      LatLng initialposition, LatLng finalposition) async {
+    String DirectionURL =
+        "https://maps.googleapis.com/maps/api/directions/json?origin=${initialposition.latitude},${initialposition.longitude}&destination=${finalposition.latitude},${finalposition.longitude}&key=$mapkey";
   }
 }
