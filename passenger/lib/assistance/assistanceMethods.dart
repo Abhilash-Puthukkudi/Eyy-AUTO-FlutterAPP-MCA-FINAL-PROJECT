@@ -7,6 +7,7 @@ import 'package:passenger/DataHandler/appData.dart';
 import 'package:passenger/assistance/requestAssistance.dart';
 import 'package:passenger/functions/configMaps.dart';
 import 'package:passenger/models/address.dart';
+import 'package:passenger/models/directDetails.dart';
 import 'package:provider/provider.dart';
 
 class assistanceMethods {
@@ -46,15 +47,30 @@ class assistanceMethods {
     return placeAddress;
   }
 
-  void obtainPlaceDirectionDetails(
+  static Future<DirectionDetails> obtainPlaceDirectionDetails(
       LatLng initialposition, LatLng finalposition) async {
     String DirectionURL =
         "https://maps.googleapis.com/maps/api/directions/json?origin=${initialposition.latitude},${initialposition.longitude}&destination=${finalposition.latitude},${finalposition.longitude}&key=$mapkey";
 
     var res = await requestAssistant.getRequest(DirectionURL);
 
-    if (res == "failed") {
-      return;
-    }
+    if (res == "failed") {}
+
+    DirectionDetails directionDetails = DirectionDetails();
+
+    directionDetails.encodedPoints =
+        res["routes"][0]["overview_polyline"]["points"];
+
+    directionDetails.distanceText =
+        res["routes"][0]["legs"][0]["distance"]["text"];
+    directionDetails.distanceValue =
+        res["routes"][0]["legs"][0]["distance"]["value"];
+
+    directionDetails.durationText =
+        res["routes"][0]["legs"][0]["duration"]["text"];
+    directionDetails.durationValue =
+        res["routes"][0]["legs"][0]["duration"]["value"];
+
+    return directionDetails;
   }
 }
