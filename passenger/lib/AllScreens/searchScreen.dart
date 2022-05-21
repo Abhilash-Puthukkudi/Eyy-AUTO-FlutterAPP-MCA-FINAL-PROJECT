@@ -1,6 +1,3 @@
-import 'dart:developer';
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:passenger/DataHandler/appData.dart';
@@ -142,6 +139,9 @@ class _searchScreenState extends State<searchScreen> {
           ),
           //tile for displaying sugessions
           //
+          SizedBox(
+            height: 10.0,
+          ),
           (placePredictionList.length > 0)
               ? Padding(
                   padding:
@@ -210,20 +210,26 @@ class predictionTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    SizedBox(
+                      height: 8.0,
+                    ),
                     Text(
                       placePredictions!.main_text.toString(),
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.lato(fontSize: 16.0),
                     ),
                     SizedBox(
-                      height: 3.0,
+                      height: 2.0,
                     ),
                     Text(placePredictions!.secondary_text.toString(),
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.lato(
                           fontSize: 12.0,
                           color: Colors.grey,
-                        ))
+                        )),
+                    SizedBox(
+                      height: 8.0,
+                    )
                   ],
                 ),
               )
