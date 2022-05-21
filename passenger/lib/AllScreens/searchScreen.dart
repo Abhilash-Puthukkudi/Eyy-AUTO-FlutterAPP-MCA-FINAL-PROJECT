@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:passenger/DataHandler/appData.dart';
+import 'package:provider/provider.dart';
 
 class searchScreen extends StatefulWidget {
   const searchScreen({Key? key}) : super(key: key);
@@ -8,8 +10,15 @@ class searchScreen extends StatefulWidget {
 }
 
 class _searchScreenState extends State<searchScreen> {
+  TextEditingController pickupTextEditingcontroller = TextEditingController();
+  TextEditingController destinationTextEditingcontroller =
+      TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    String placeAddress =
+        Provider.of<appData>(context).pickUpLocation?.placeName ?? "";
+    pickupTextEditingcontroller.text = placeAddress;
     return Scaffold(
       body: Column(
         children: [
@@ -67,6 +76,7 @@ class _searchScreenState extends State<searchScreen> {
                         child: Padding(
                           padding: EdgeInsets.all(8.0),
                           child: TextField(
+                            controller: pickupTextEditingcontroller,
                             decoration: InputDecoration(
                                 fillColor: Colors.grey,
                                 hintText: "Pickup Location",
@@ -99,6 +109,7 @@ class _searchScreenState extends State<searchScreen> {
                         child: Padding(
                           padding: EdgeInsets.all(8.0),
                           child: TextField(
+                            controller: destinationTextEditingcontroller,
                             decoration: InputDecoration(
                                 fillColor: Colors.grey,
                                 hintText: "Where to?",
