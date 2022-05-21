@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:developer' as d;
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:passenger/AllScreens/searchScreen.dart';
 import 'package:passenger/DataHandler/appData.dart';
 import 'package:passenger/assistance/assistanceMethods.dart';
 import 'package:provider/provider.dart';
@@ -153,7 +153,12 @@ class _mainScreenState extends State<mainScreen> {
                           height: 20,
                         ),
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => searchScreen()));
+                          },
                           child: Container(
                             decoration: BoxDecoration(
                                 color: Color.fromARGB(255, 255, 255, 255),
