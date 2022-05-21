@@ -1,7 +1,10 @@
 import 'dart:developer';
+import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:passenger/DataHandler/appData.dart';
+import 'package:passenger/allwidgets/dividerWidget.dart';
 import 'package:passenger/assistance/requestAssistance.dart';
 import 'package:passenger/functions/configMaps.dart';
 import 'package:passenger/models/placePredictions.dart';
@@ -18,6 +21,8 @@ class _searchScreenState extends State<searchScreen> {
   TextEditingController pickupTextEditingcontroller = TextEditingController();
   TextEditingController destinationTextEditingcontroller =
       TextEditingController();
+
+  List<PlacePredictions> placePredictionList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -137,6 +142,25 @@ class _searchScreenState extends State<searchScreen> {
           ),
           //tile for displaying sugessions
           //
+          (placePredictionList.length > 0)
+              ? Padding(
+                  padding:
+                      EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                  child: ListView.separated(
+                    padding: EdgeInsets.all(0.0),
+                    itemBuilder: (context, index) {
+                      return predictionTile(
+                        placePredictions: placePredictionList[index],
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) =>
+                        DividorWidget(),
+                    itemCount: placePredictionList.length,
+                    shrinkWrap: true,
+                    physics: ClampingScrollPhysics(),
+                  ),
+                )
+              : Container()
         ],
       ),
     );
@@ -153,18 +177,61 @@ class _searchScreenState extends State<searchScreen> {
       if (res["status"] == "OK") {
         var predictions = res["predictions"];
         var placesList = (predictions as List)
-            .map((e) => placePredictions.fromjson(e))
+            .map((e) => PlacePredictions.fromjson(e))
             .toList();
+
+        setState(() {
+          placePredictionList = placesList;
+        });
       }
     }
   }
 }
 
 class predictionTile extends StatelessWidget {
-  const predictionTile({Key? key}) : super(key: key);
+  final PlacePredictions? placePredictions;
+  const predictionTile({Key? key, this.placePredictions}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      child: Column(
+        children: [
+          SizedBox(
+            width: 10.0,
+          ),
+          Row(
+            children: [
+              Icon(Icons.add_location),
+              SizedBox(
+                width: 14.0,
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      placePredictions!.main_text.toString(),
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.lato(fontSize: 16.0),
+                    ),
+                    SizedBox(
+                      height: 3.0,
+                    ),
+                    Text(placePredictions!.secondary_text.toString(),
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.lato(
+                          fontSize: 12.0,
+                          color: Colors.grey,
+                        ))
+                  ],
+                ),
+              )
+            ],
+          ),
+          SizedBox(width: 10.0)
+        ],
+      ),
+    );
   }
 }
