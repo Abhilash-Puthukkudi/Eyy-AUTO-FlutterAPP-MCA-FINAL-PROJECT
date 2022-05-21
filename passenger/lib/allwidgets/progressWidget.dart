@@ -32,9 +32,12 @@ class _progressBarState extends State<progressBar> {
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
               ),
               SizedBox(width: 26.0),
-              Text(
-                widget.message,
-                style: TextStyle(color: Colors.white),
+              Expanded(
+                child: Text(
+                  widget.message,
+                  style: TextStyle(color: Colors.white),
+                  overflow: TextOverflow.ellipsis,
+                ),
               )
             ],
           ),
