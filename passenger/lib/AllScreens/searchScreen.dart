@@ -4,8 +4,10 @@ import 'package:passenger/DataHandler/appData.dart';
 import 'package:passenger/allwidgets/dividerWidget.dart';
 import 'package:passenger/assistance/requestAssistance.dart';
 import 'package:passenger/functions/configMaps.dart';
+import 'package:passenger/models/address.dart';
 import 'package:passenger/models/placePredictions.dart';
 import 'package:provider/provider.dart';
+import 'dart:developer' as d;
 
 class searchScreen extends StatefulWidget {
   const searchScreen({Key? key}) : super(key: key);
@@ -194,50 +196,77 @@ class predictionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          SizedBox(
-            width: 10.0,
-          ),
-          Row(
-            children: [
-              Icon(Icons.add_location),
-              SizedBox(
-                width: 14.0,
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 8.0,
-                    ),
-                    Text(
-                      placePredictions!.main_text.toString(),
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.lato(fontSize: 16.0),
-                    ),
-                    SizedBox(
-                      height: 2.0,
-                    ),
-                    Text(placePredictions!.secondary_text.toString(),
-                        overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.lato(
-                          fontSize: 12.0,
-                          color: Colors.grey,
-                        )),
-                    SizedBox(
-                      height: 8.0,
-                    )
-                  ],
+    return ElevatedButton(
+      onPressed: () {},
+      child: Container(
+        child: Column(
+          children: [
+            SizedBox(
+              width: 10.0,
+            ),
+            Row(
+              children: [
+                Icon(Icons.add_location),
+                SizedBox(
+                  width: 14.0,
                 ),
-              )
-            ],
-          ),
-          SizedBox(width: 10.0)
-        ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 8.0,
+                      ),
+                      Text(
+                        placePredictions!.main_text.toString(),
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.lato(fontSize: 16.0),
+                      ),
+                      SizedBox(
+                        height: 2.0,
+                      ),
+                      Text(placePredictions!.secondary_text.toString(),
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.lato(
+                            fontSize: 12.0,
+                            color: Colors.grey,
+                          )),
+                      SizedBox(
+                        height: 8.0,
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+            SizedBox(width: 10.0)
+          ],
+        ),
       ),
     );
+  }
+
+  void getplaceDetails(String placeID, context) async {
+    String placeDetailsURL =
+        "https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeID&key=$mapkey";
+
+    var res = await requestAssistant.getRequest(placeDetailsURL);
+
+    if (res == "failed") {
+      return;
+    }
+    if (res["status"] == "OK") {
+      Address address = Address();
+      address.placeName = res["result"]["name"];
+      address.placeid = placeID;
+      address.lattitude = res["result"]["geometry"]["location"]["lat"];
+      address.longitude = res["result"]["geometry"]["location"]["lng"];
+
+      Provider.of<appData>(context, listen: false)
+          .updateDropOffLocationAddress(address);
+
+      d.log("this is the address ");
+      d.log(address.placeName.toString());
+    }
   }
 }
