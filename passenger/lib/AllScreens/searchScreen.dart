@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:passenger/DataHandler/appData.dart';
 import 'package:passenger/assistance/requestAssistance.dart';
 import 'package:passenger/functions/configMaps.dart';
+import 'package:passenger/models/placePredictions.dart';
 import 'package:provider/provider.dart';
 
 class searchScreen extends StatefulWidget {
@@ -134,6 +135,8 @@ class _searchScreenState extends State<searchScreen> {
               ),
             ),
           ),
+          //tile for displaying sugessions
+          //
         ],
       ),
     );
@@ -147,7 +150,21 @@ class _searchScreenState extends State<searchScreen> {
       if (res == "failed") {
         return;
       }
-      log(res.toString());
+      if (res["status"] == "OK") {
+        var predictions = res["predictions"];
+        var placesList = (predictions as List)
+            .map((e) => placePredictions.fromjson(e))
+            .toList();
+      }
     }
+  }
+}
+
+class predictionTile extends StatelessWidget {
+  const predictionTile({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
