@@ -197,7 +197,9 @@ class predictionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+        getplaceDetails(placePredictions!.place_id.toString(), context);
+      },
       child: Container(
         child: Column(
           children: [
