@@ -50,5 +50,11 @@ class assistanceMethods {
       LatLng initialposition, LatLng finalposition) async {
     String DirectionURL =
         "https://maps.googleapis.com/maps/api/directions/json?origin=${initialposition.latitude},${initialposition.longitude}&destination=${finalposition.latitude},${finalposition.longitude}&key=$mapkey";
+
+    var res = await requestAssistant.getRequest(DirectionURL);
+
+    if (res == "failed") {
+      return;
+    }
   }
 }
