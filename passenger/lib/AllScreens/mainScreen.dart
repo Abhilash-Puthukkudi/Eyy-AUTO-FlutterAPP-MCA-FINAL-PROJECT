@@ -29,6 +29,8 @@ class _mainScreenState extends State<mainScreen> {
   double BottompaddingOfMap = 0.0;
 
   // markers for map
+  Set<Marker> markersSet = {};
+  Set<Circle> circlesSet = {};
 
 // geolocation block
   Position? currentPostiion;
@@ -80,6 +82,8 @@ class _mainScreenState extends State<mainScreen> {
               zoomGesturesEnabled: true,
               zoomControlsEnabled: true,
               polylines: polyLineSet,
+              markers: markersSet,
+              circles: circlesSet,
               onMapCreated: (GoogleMapController controller) {
                 _controllerGoogleMap.complete(controller);
                 newGoogleMapController = controller;
@@ -317,5 +321,51 @@ class _mainScreenState extends State<mainScreen> {
 
     newGoogleMapController!
         .animateCamera(CameraUpdate.newLatLngBounds(latLngBounds, 70));
+
+    // setting markers for map
+
+    Marker pickupLocationMarker = Marker(
+      markerId: MarkerId("pickupID"),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+      infoWindow:
+          InfoWindow(title: initialpos.placeName, snippet: "My Location"),
+      position: pickUpLapLng,
+    );
+
+    Marker dropOffLocationMarker = Marker(
+      markerId: MarkerId("dropOffID"),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+      infoWindow: InfoWindow(
+          title: finalpos.placeName, snippet: "Destination Location"),
+      position: dropOffLapLng,
+    );
+
+    setState(() {
+      markersSet.add(pickupLocationMarker);
+      markersSet.add(dropOffLocationMarker);
+    });
+
+    Circle pickUpLocCircle = Circle(
+      circleId: CircleId("pickupID"),
+      fillColor: Colors.yellow,
+      center: pickUpLapLng,
+      radius: 12,
+      strokeWidth: 4,
+      strokeColor: Colors.black,
+    );
+
+    Circle dropOffLocCircle = Circle(
+      circleId: CircleId("dropOffID"),
+      fillColor: Colors.deepPurple,
+      center: dropOffLapLng,
+      radius: 12,
+      strokeWidth: 4,
+      strokeColor: Colors.purple,
+    );
+
+    setState(() {
+      circlesSet.add(pickUpLocCircle);
+      circlesSet.add(dropOffLocCircle);
+    });
   }
 }
