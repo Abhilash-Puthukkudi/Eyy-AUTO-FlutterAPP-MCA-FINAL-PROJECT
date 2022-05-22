@@ -20,7 +20,7 @@ class assistanceMethods {
         "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=$mapkey";
     log(url);
     var response = await requestAssistant.getRequest(url);
-
+    log(position.latitude.toString());
     if (response != "failed") {
       String res = response["results"][0]["formatted_address"];
 
@@ -28,15 +28,8 @@ class assistanceMethods {
 
       placeAddress = placeAddressList[0] + " , " + placeAddressList[1];
 
-      // st1 = response["results"][0]["address_components"][2]["long_name"]; //3
-      // st2 = response["results"][0]["address_components"][4]["long_name"]; //4
-      // st3 = response["results"][0]["address_components"][5]["long_name"];
-      // st4 = response["results"][0]["address_components"][6]["long_name"];
-
-      // placeAddress = st1 + "," + st2 + "," + st3;
-
       Address passengerPickupadress = new Address();
-      passengerPickupadress.longitude = position.latitude;
+      passengerPickupadress.lattitude = position.latitude;
       passengerPickupadress.longitude = position.longitude;
       passengerPickupadress.placeName = placeAddress;
 
@@ -74,3 +67,12 @@ class assistanceMethods {
     return directionDetails;
   }
 }
+
+
+
+  // st1 = response["results"][0]["address_components"][2]["long_name"]; //3
+      // st2 = response["results"][0]["address_components"][4]["long_name"]; //4
+      // st3 = response["results"][0]["address_components"][5]["long_name"];
+      // st4 = response["results"][0]["address_components"][6]["long_name"];
+
+      // placeAddress = st1 + "," + st2 + "," + st3;
