@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer' as d;
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -21,8 +22,13 @@ class mainScreen extends StatefulWidget {
 
 class _mainScreenState extends State<mainScreen> {
   Completer<GoogleMapController> _controllerGoogleMap = Completer();
-
+//polyline
+  List<LatLng> polyLineCordinates = [];
+  Set<Polyline> polyLineSet = {};
+//polyline end
   double BottompaddingOfMap = 0.0;
+
+  // markers for map
 
 // geolocation block
   Position? currentPostiion;
@@ -73,6 +79,7 @@ class _mainScreenState extends State<mainScreen> {
               myLocationEnabled: true,
               zoomGesturesEnabled: true,
               zoomControlsEnabled: true,
+              polylines: polyLineSet,
               onMapCreated: (GoogleMapController controller) {
                 _controllerGoogleMap.complete(controller);
                 newGoogleMapController = controller;
@@ -261,5 +268,54 @@ class _mainScreenState extends State<mainScreen> {
     Navigator.pop(context);
     d.log("THIS IS THEDATA U NEED ");
     d.log(details.encodedPoints.toString());
+    // polyline ploting
+
+    PolylinePoints polylinePoints = PolylinePoints();
+    List<PointLatLng> decodedPolyLinePointsResult =
+        polylinePoints.decodePolyline(details.encodedPoints.toString());
+
+    polyLineCordinates.clear(); //clearing polylinecordinates list
+
+    if (decodedPolyLinePointsResult.isNotEmpty) {
+      decodedPolyLinePointsResult.forEach((PointLatLng pointLatLng) {
+        polyLineCordinates.add(LatLng(pointLatLng.latitude,
+            pointLatLng.longitude)); // adding cordinates to the list
+      });
+    }
+    polyLineSet.clear(); // clearing polyline set before adding polylines
+    setState(() {
+      Polyline polyline = Polyline(
+          color: Colors.black,
+          polylineId: PolylineId("PolylineID"),
+          jointType: JointType.round,
+          points: polyLineCordinates,
+          width: 5,
+          startCap: Cap.roundCap,
+          endCap: Cap.roundCap,
+          geodesic: true);
+
+      polyLineSet.add(polyline); // adding polyline to set
+    });
+//  setting polyline camera view
+    LatLngBounds latLngBounds;
+    if (pickUpLapLng.latitude > dropOffLapLng.latitude &&
+        pickUpLapLng.longitude > dropOffLapLng.longitude) {
+      latLngBounds =
+          LatLngBounds(southwest: dropOffLapLng, northeast: pickUpLapLng);
+    } else if (pickUpLapLng.longitude > dropOffLapLng.longitude) {
+      latLngBounds = LatLngBounds(
+          southwest: LatLng(pickUpLapLng.latitude, dropOffLapLng.longitude),
+          northeast: LatLng(dropOffLapLng.latitude, pickUpLapLng.longitude));
+    } else if (pickUpLapLng.latitude > dropOffLapLng.latitude) {
+      latLngBounds = LatLngBounds(
+          southwest: LatLng(dropOffLapLng.latitude, pickUpLapLng.longitude),
+          northeast: LatLng(pickUpLapLng.latitude, dropOffLapLng.longitude));
+    } else {
+      latLngBounds =
+          LatLngBounds(southwest: pickUpLapLng, northeast: dropOffLapLng);
+    }
+
+    newGoogleMapController!
+        .animateCamera(CameraUpdate.newLatLngBounds(latLngBounds, 70));
   }
 }
