@@ -47,7 +47,9 @@ class assistanceMethods {
 
     var res = await requestAssistant.getRequest(DirectionURL);
 
-    if (res == "failed") {}
+    if (res == "failed") {
+      
+    }
 
     DirectionDetails directionDetails = DirectionDetails();
 

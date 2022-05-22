@@ -278,6 +278,8 @@ class predictionTile extends StatelessWidget {
 
       d.log("this is the address ");
       d.log(address.placeName.toString());
+
+      Navigator.pop(context, "obtainedDirection");
     }
   }
 }

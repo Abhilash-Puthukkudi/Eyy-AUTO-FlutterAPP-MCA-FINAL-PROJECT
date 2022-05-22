@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:passenger/AllScreens/searchScreen.dart';
 import 'package:passenger/DataHandler/appData.dart';
+import 'package:passenger/allwidgets/progressWidget.dart';
 import 'package:passenger/assistance/assistanceMethods.dart';
 import 'package:provider/provider.dart';
 
@@ -44,7 +45,7 @@ class _mainScreenState extends State<mainScreen> {
     String address =
         await assistanceMethods.searchCordinateAddress(position, context);
 
-    print("adress is $address");
+    d.log("adress is $address");
     d.log(address);
   }
 
@@ -153,11 +154,15 @@ class _mainScreenState extends State<mainScreen> {
                           height: 20,
                         ),
                         GestureDetector(
-                          onTap: () {
-                            Navigator.push(
+                          onTap: () async {
+                            var res = await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => searchScreen()));
+
+                            if (res == "obtainedDirection") {
+                              await getPlaceDirection();
+                            }
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -216,7 +221,7 @@ class _mainScreenState extends State<mainScreen> {
                                           .placeName
                                           .toString()
                                       : "Fetching pickup Location",
-                                  overflow: TextOverflow.visible,
+                                  overflow: TextOverflow.ellipsis,
                                   style: GoogleFonts.lato(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w500),
@@ -233,5 +238,28 @@ class _mainScreenState extends State<mainScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> getPlaceDirection() async {
+    var initialpos =
+        Provider.of<appData>(context, listen: false).pickUpLocation;
+    var finalpos = Provider.of<appData>(context, listen: false).dropOffLocation;
+    // d.log(initialpos!.lattitude.toString());
+
+    var pickUpLapLng = LatLng(
+        initialpos!.lattitude!.toDouble(), initialpos.longitude!.toDouble());
+
+    var dropOffLapLng =
+        LatLng(finalpos!.lattitude!.toDouble(), finalpos.longitude!.toDouble());
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => progressBar("Please wait.."));
+
+    var details = await assistanceMethods.obtainPlaceDirectionDetails(
+        pickUpLapLng, dropOffLapLng);
+    Navigator.pop(context);
+    d.log("THIS IS THEDATA U NEED ");
+    d.log(details.encodedPoints.toString());
   }
 }
