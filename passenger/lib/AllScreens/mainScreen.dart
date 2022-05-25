@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer' as d;
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -251,9 +252,9 @@ class _mainScreenState extends State<mainScreen> {
                 left: 0.0,
                 right: 0.0,
                 child: Container(
-                  height: 300.0,
+                  height: 250.0,
                   decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Color.fromARGB(223, 34, 34, 34),
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(16.0),
                           topRight: Radius.circular(16.0)),
@@ -270,7 +271,7 @@ class _mainScreenState extends State<mainScreen> {
                       children: [
                         Container(
                           width: double.infinity,
-                          color: Colors.tealAccent,
+                          color: Colors.yellowAccent,
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 16.0),
                             child: Row(
@@ -304,12 +305,63 @@ class _mainScreenState extends State<mainScreen> {
                         SizedBox(
                           height: 20.0,
                         ),
-                        Padding(padding: EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Row(
-                          children: [
-                            Icon(Icons.cash)
-                          ],
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Row(
+                            children: [
+                              Icon(
+                                FontAwesomeIcons.moneyCheck,
+                                size: 18.0,
+                                color: Colors.yellow,
+                              ),
+                              SizedBox(
+                                width: 16.0,
+                              ),
+                              Text(
+                                "Cash",
+                                style: TextStyle(color: Colors.yellow),
+                              ),
+                              SizedBox(
+                                width: 6.0,
+                              ),
+                              Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.yellow,
+                              ),
+                            ],
+                          ),
                         ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.0),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              d.log("print");
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.all(17.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Request Ride",
+                                    style: TextStyle(
+                                        fontSize: 20.0,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Icon(
+                                    FontAwesomeIcons.hand,
+                                    color: Colors.black,
+                                    size: 26.0,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
                         )
                       ],
                     ),
