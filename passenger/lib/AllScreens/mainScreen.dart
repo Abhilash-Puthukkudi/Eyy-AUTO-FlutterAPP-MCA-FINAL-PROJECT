@@ -10,6 +10,7 @@ import 'package:passenger/AllScreens/searchScreen.dart';
 import 'package:passenger/DataHandler/appData.dart';
 import 'package:passenger/allwidgets/progressWidget.dart';
 import 'package:passenger/assistance/assistanceMethods.dart';
+import 'package:passenger/models/directDetails.dart';
 import 'package:provider/provider.dart';
 
 class mainScreen extends StatefulWidget {
@@ -23,6 +24,9 @@ class mainScreen extends StatefulWidget {
 
 class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
   Completer<GoogleMapController> _controllerGoogleMap = Completer();
+
+  var tripdirectionDetails;
+
 //polyline
   List<LatLng> polyLineCordinates = [];
   Set<Polyline> polyLineSet = {};
@@ -35,12 +39,17 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
 
   double rideDetailsContainerHeight = 0;
   double searchContainerHeight = 250.0;
+  bool drawerOpen = true;
+  resetApp() {
+    
+  }
   void displayRideDetailsContainer() async {
     await getPlaceDirection();
     setState(() {
       searchContainerHeight = 0;
       rideDetailsContainerHeight = 250.0;
       BottompaddingOfMap = 255;
+      drawerOpen = false;
     });
   }
 
@@ -128,7 +137,7 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
                   child: CircleAvatar(
                     backgroundColor: Color.fromRGBO(252, 249, 64, 1),
                     child: Icon(
-                      Icons.menu,
+                      (drawerOpen) ? Icons.menu : Icons.close,
                       color: Colors.black,
                     ),
                     radius: 20.0,
@@ -311,13 +320,26 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
                                           style: TextStyle(
                                               fontSize: 18.0,
                                               fontFamily: "Brand-Bold")),
-                                      Text("10KM",
+                                      Text(
+                                          ((tripdirectionDetails != null)
+                                              ? tripdirectionDetails
+                                                  .distanceText
+                                                  .toString()
+                                              : ''),
                                           style: TextStyle(
                                               fontSize: 18.0,
                                               fontFamily: "Brand Bold",
                                               color: Colors.grey)),
                                     ],
-                                  )
+                                  ),
+                                  Expanded(child: Container()),
+                                  Text(
+                                      ((tripdirectionDetails != null
+                                          ? '\₹${assistanceMethods.calculateFares(tripdirectionDetails)}'
+                                          : '')),
+                                      style: TextStyle(
+                                          fontFamily: "Brand Bold",
+                                          color: Colors.grey)),
                                 ],
                               ),
                             ),
@@ -412,6 +434,9 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
 
     var details = await assistanceMethods.obtainPlaceDirectionDetails(
         pickUpLapLng, dropOffLapLng);
+    setState(() {
+      tripdirectionDetails = details;
+    });
     Navigator.pop(context);
     d.log("THIS IS THEDATA U NEED ");
     d.log(details.encodedPoints.toString());

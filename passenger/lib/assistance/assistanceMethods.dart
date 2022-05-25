@@ -47,9 +47,7 @@ class assistanceMethods {
 
     var res = await requestAssistant.getRequest(DirectionURL);
 
-    if (res == "failed") {
-      
-    }
+    if (res == "failed") {}
 
     DirectionDetails directionDetails = DirectionDetails();
 
@@ -67,6 +65,29 @@ class assistanceMethods {
         res["routes"][0]["legs"][0]["duration"]["value"];
 
     return directionDetails;
+  }
+
+  static int calculateFares(DirectionDetails directionDetails) {
+    double timeTraveldMinutes =
+        (directionDetails.durationValue! / 60); // perminute
+
+    /*
+   minimum charge for an auto-rickshaw ride is Rs 30 for 1.5 km. 
+   Each kilometre thereafter extra Rs 15 
+   */
+
+    double distanceTraveld = (directionDetails.distanceValue! / 1000);
+    double fare = 0;
+    if (distanceTraveld <= 1.5) {
+      fare = 30.0;
+    } else {
+      double extradistance = distanceTraveld - 1.5;
+      double extracharge = extradistance * 15;
+
+      fare = extracharge + 30;
+    }
+    //km
+    return fare.truncate();
   }
 }
 
