@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:passenger/AllScreens/loginScreen.dart';
@@ -41,7 +42,9 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         title: 'Eyy-AUTO Passenger',
         theme: ThemeData(primarySwatch: Colors.yellow),
-        initialRoute: loginScreen.idScreen,
+        initialRoute: FirebaseAuth.instance.currentUser == null
+            ? loginScreen.idScreen
+            : mainScreen.idScreen,
         routes: {
           registrationScreen.idScreen: (context) => registrationScreen(),
           loginScreen.idScreen: (context) => loginScreen(),
