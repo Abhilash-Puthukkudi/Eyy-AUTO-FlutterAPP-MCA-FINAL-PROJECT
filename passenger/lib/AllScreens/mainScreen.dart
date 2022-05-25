@@ -41,8 +41,21 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
   double searchContainerHeight = 250.0;
   bool drawerOpen = true;
   resetApp() {
-    
+    setState(() {
+      drawerOpen = true;
+      searchContainerHeight = 250;
+      rideDetailsContainerHeight = 0.0;
+      BottompaddingOfMap = 255;
+
+      polyLineSet.clear();
+      markersSet.clear();
+      circlesSet.clear();
+      polyLineCordinates.clear();
+    });
+
+    locateposition();
   }
+
   void displayRideDetailsContainer() async {
     await getPlaceDirection();
     setState(() {
@@ -122,7 +135,12 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
               top: 35.0,
               left: 22.0,
               child: GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  if (drawerOpen) {
+                  } else {
+                    resetApp();
+                  }
+                },
                 child: Container(
                   decoration: BoxDecoration(
                       color: Colors.yellow,
