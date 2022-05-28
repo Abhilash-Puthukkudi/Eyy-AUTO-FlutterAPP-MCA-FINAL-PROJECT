@@ -67,7 +67,7 @@ class assistanceMethods {
     return directionDetails;
   }
 
-  static int calculateFares(DirectionDetails directionDetails) {
+  static List calculateFares(DirectionDetails directionDetails) {
     double timeTraveldMinutes =
         (directionDetails.durationValue! / 60); // perminute
 
@@ -87,15 +87,22 @@ class assistanceMethods {
       fare = extracharge + 30;
     }
     //km
-    return fare.truncate();
+    List returnList = [];
+    returnList.add(fare.truncate());
+    // creating HH MM string
+    Duration dur = Duration(minutes: timeTraveldMinutes.truncate());
+    String durationString =
+        "${dur.inHours} Hours and ${dur.inMinutes.remainder(60)} Minutes";
+    log(durationString);
+    returnList.add(durationString);
+
+    return returnList;
   }
 }
 
+// st1 = response["results"][0]["address_components"][2]["long_name"]; //3
+// st2 = response["results"][0]["address_components"][4]["long_name"]; //4
+// st3 = response["results"][0]["address_components"][5]["long_name"];
+// st4 = response["results"][0]["address_components"][6]["long_name"];
 
-
-  // st1 = response["results"][0]["address_components"][2]["long_name"]; //3
-      // st2 = response["results"][0]["address_components"][4]["long_name"]; //4
-      // st3 = response["results"][0]["address_components"][5]["long_name"];
-      // st4 = response["results"][0]["address_components"][6]["long_name"];
-
-      // placeAddress = st1 + "," + st2 + "," + st3;
+// placeAddress = st1 + "," + st2 + "," + st3;

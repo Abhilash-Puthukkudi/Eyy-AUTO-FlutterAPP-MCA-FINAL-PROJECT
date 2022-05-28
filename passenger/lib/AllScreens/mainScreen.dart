@@ -1,15 +1,18 @@
 import 'dart:async';
 import 'dart:developer' as d;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:passenger/AllScreens/loginScreen.dart';
 import 'package:passenger/AllScreens/searchScreen.dart';
 import 'package:passenger/DataHandler/appData.dart';
 import 'package:passenger/allwidgets/progressWidget.dart';
 import 'package:passenger/assistance/assistanceMethods.dart';
+import 'package:passenger/functions/validators.dart';
 import 'package:passenger/models/directDetails.dart';
 import 'package:provider/provider.dart';
 
@@ -137,6 +140,10 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
               child: GestureDetector(
                 onTap: () {
                   if (drawerOpen) {
+                    FirebaseAuth.instance.signOut();
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, loginScreen.idScreen, ((route) => false));
+                    greenMessenger(context, "Logout Sucessfull !");
                   } else {
                     resetApp();
                   }
@@ -353,11 +360,12 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
                                   Expanded(child: Container()),
                                   Text(
                                       ((tripdirectionDetails != null
-                                          ? '\₹${assistanceMethods.calculateFares(tripdirectionDetails)}'
+                                          ? '\₹${assistanceMethods.calculateFares(tripdirectionDetails)[0]}'
                                           : '')),
                                       style: TextStyle(
+                                          fontSize: 18.0,
                                           fontFamily: "Brand Bold",
-                                          color: Colors.grey)),
+                                          color: Colors.black)),
                                 ],
                               ),
                             ),
@@ -370,7 +378,7 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
                             child: Row(
                               children: [
                                 Icon(
-                                  FontAwesomeIcons.moneyCheck,
+                                  FontAwesomeIcons.clock,
                                   size: 18.0,
                                   color: Colors.yellow,
                                 ),
@@ -378,16 +386,18 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
                                   width: 16.0,
                                 ),
                                 Text(
-                                  "Cash",
+                                  (tripdirectionDetails != null)
+                                      ? "Estimated Travel Time : ${assistanceMethods.calculateFares(tripdirectionDetails)[1]}"
+                                      : '',
                                   style: TextStyle(color: Colors.yellow),
                                 ),
                                 SizedBox(
                                   width: 6.0,
                                 ),
-                                Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: Colors.yellow,
-                                ),
+                                // Icon(
+                                //   Icons.keyboard_arrow_down,
+                                //   color: Colors.yellow,
+                                // ),
                               ],
                             ),
                           ),
@@ -456,7 +466,7 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
       tripdirectionDetails = details;
     });
     Navigator.pop(context);
-    d.log("THIS IS THEDATA U NEED ");
+    d.log("THIS IS THE DATA U NEED ");
     d.log(details.encodedPoints.toString());
     // polyline ploting
 
