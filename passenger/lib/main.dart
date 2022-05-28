@@ -28,6 +28,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
+    // ignore: todo
     // TODO: implement initState
     listenforpermissions();
     super.initState();

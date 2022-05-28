@@ -13,7 +13,6 @@ import 'package:passenger/DataHandler/appData.dart';
 import 'package:passenger/allwidgets/progressWidget.dart';
 import 'package:passenger/assistance/assistanceMethods.dart';
 import 'package:passenger/functions/validators.dart';
-import 'package:passenger/models/directDetails.dart';
 import 'package:provider/provider.dart';
 
 class mainScreen extends StatefulWidget {
@@ -437,7 +436,32 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
                       ),
                     ),
                   ),
-                ))
+                )),
+
+            // request wait panel
+
+            Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(16.0),
+                      topRight: Radius.circular(16.0)),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                        spreadRadius: 0.5,
+                        blurRadius: 16.0,
+                        color: Colors.black,
+                        offset: Offset(0.7, 0.7))
+                  ]),
+              height: 250.0,
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 12.0,
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),
