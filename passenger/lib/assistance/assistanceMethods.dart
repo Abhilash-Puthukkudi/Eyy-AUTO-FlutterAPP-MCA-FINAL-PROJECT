@@ -93,7 +93,7 @@ class assistanceMethods {
     Duration dur = Duration(minutes: timeTraveldMinutes.truncate());
     String durationString =
         "${dur.inHours} Hours and ${dur.inMinutes.remainder(60)} Minutes";
-    log(durationString);
+    // log(durationString);
     returnList.add(durationString);
 
     return returnList;
