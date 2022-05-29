@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:passenger/AllScreens/mainScreen.dart';
 import 'package:passenger/AllScreens/registrationScreen.dart';
 import 'package:passenger/allwidgets/progressWidget.dart';
+import 'package:passenger/assistance/assistanceMethods.dart';
+import 'package:passenger/functions/configMaps.dart';
 import 'package:passenger/functions/firebaseReferances.dart';
 import 'package:passenger/functions/validators.dart';
 
@@ -19,6 +21,11 @@ class loginScreen extends StatefulWidget {
 }
 
 class _loginScreenState extends State<loginScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
   //text editing controllers
 
   final TextEditingController usernameController = TextEditingController();
@@ -161,6 +168,7 @@ class _loginScreenState extends State<loginScreen> {
               if (value.snapshot.value != null)
                 {
                   Navigator.pop(context),
+                  assistanceMethods.getCurrentOnlineUserInformation,
                   greenMessenger(context, "Welcome..!"),
                   Navigator.pushNamedAndRemoveUntil(
                       context, mainScreen.idScreen, (route) => false)
