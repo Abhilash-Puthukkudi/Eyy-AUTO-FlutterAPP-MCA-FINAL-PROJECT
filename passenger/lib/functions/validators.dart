@@ -9,3 +9,17 @@ greenMessenger(BuildContext context, String msg) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       backgroundColor: Color.fromARGB(255, 63, 236, 10), content: Text(msg)));
 }
+
+const colorizeColors = [
+  Colors.black,
+  Colors.purple,
+  Colors.blue,
+  Colors.yellow,
+  Colors.red,
+  Colors.green,
+];
+
+const colorizeTextStyle = TextStyle(
+  fontSize: 56.0,
+  fontFamily: 'Signatra',
+);

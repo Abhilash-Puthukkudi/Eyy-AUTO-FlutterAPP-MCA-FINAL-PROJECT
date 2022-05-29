@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer' as d;
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -40,8 +41,19 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
   Set<Circle> circlesSet = {};
 
   double rideDetailsContainerHeight = 0;
+  double requestRideContainerHeight = 0;
   double searchContainerHeight = 250.0;
   bool drawerOpen = true;
+
+  void displayRequestRideContainer() {
+    setState(() {
+      requestRideContainerHeight = 250.0;
+      rideDetailsContainerHeight = 0.0;
+      BottompaddingOfMap = 255;
+      drawerOpen = true;
+    });
+  }
+
   resetApp() {
     setState(() {
       drawerOpen = true;
@@ -222,6 +234,7 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
                               if (res == "obtainedDirection") {
                                 // await getPlaceDirection();
                                 displayRideDetailsContainer();
+                                d.log("here reaching");
                               }
                             },
                             child: Container(
@@ -408,6 +421,7 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
                             child: ElevatedButton(
                               onPressed: () {
                                 d.log("print");
+                                displayRequestRideContainer();
                               },
                               child: Padding(
                                 padding: EdgeInsets.all(17.0),
@@ -440,26 +454,92 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
 
             // request wait panel
 
-            Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(16.0),
-                      topRight: Radius.circular(16.0)),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                        spreadRadius: 0.5,
-                        blurRadius: 16.0,
-                        color: Colors.black,
-                        offset: Offset(0.7, 0.7))
-                  ]),
-              height: 250.0,
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 12.0,
+            Positioned(
+              bottom: 0.0,
+              left: 0.0,
+              right: 0.0,
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(16.0),
+                        topRight: Radius.circular(16.0)),
+                    color: Color.fromARGB(255, 249, 246, 68),
+                    boxShadow: [
+                      BoxShadow(
+                          spreadRadius: 0.5,
+                          blurRadius: 16.0,
+                          color: Colors.black,
+                          offset: Offset(0.7, 0.7))
+                    ]),
+                height: requestRideContainerHeight,
+                child: Padding(
+                  padding: const EdgeInsets.all(30.0),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 18.0,
+                      ),
+                      // animated text
+                      SizedBox(
+                        width: double.infinity,
+                        child: AnimatedTextKit(
+                          animatedTexts: [
+                            ColorizeAnimatedText(
+                              'Requesting a Ride..',
+                              textStyle: colorizeTextStyle,
+                              textAlign: TextAlign.center,
+                              colors: colorizeColors,
+                            ),
+                            ColorizeAnimatedText(
+                              'Please Wait...',
+                              textStyle: colorizeTextStyle,
+                              textAlign: TextAlign.center,
+                              colors: colorizeColors,
+                            ),
+                            ColorizeAnimatedText(
+                              'Finding a driver..',
+                              textAlign: TextAlign.center,
+                              textStyle: colorizeTextStyle,
+                              colors: colorizeColors,
+                            ),
+                          ],
+                          isRepeatingAnimation: true,
+                          onTap: () {
+                            print("Tap Event");
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: 12.0,
+                      ),
+                      Container(
+                        height: 60.0,
+                        width: 60.0,
+                        decoration: BoxDecoration(
+                          color: Color.fromRGBO(252, 249, 64, 1),
+                          borderRadius: BorderRadius.circular(26.0),
+                          border: Border.all(width: 2.0, color: Colors.black),
+                        ),
+                        child: Icon(
+                          Icons.close,
+                          size: 26.0,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Container(
+                        width: double.infinity,
+                        child: Text(
+                          "Cancel Ride",
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+
+                      // animated text end
+                    ],
                   ),
-                ],
+                ),
               ),
             )
           ],

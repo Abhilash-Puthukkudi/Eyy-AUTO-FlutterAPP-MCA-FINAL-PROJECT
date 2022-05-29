@@ -97,6 +97,12 @@ class assistanceMethods {
 
     return returnList;
   }
+
+  static void getCurrentOnlineUserInformation() async {
+    
+
+
+  }
 }
 
 // st1 = response["results"][0]["address_components"][2]["long_name"]; //3
