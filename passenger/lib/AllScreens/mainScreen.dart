@@ -63,7 +63,8 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
 
   // saving ride request
   void saveRideRequest() {
-    rideRequestRef = FirebaseDatabase.instance.ref().child("Ride Requests");
+    rideRequestRef =
+        FirebaseDatabase.instance.ref().child("Ride Requests").push();
     var pickUp = Provider.of<appData>(context, listen: false).pickUpLocation;
     var dropOff = Provider.of<appData>(context, listen: false).dropOffLocation;
 
@@ -89,9 +90,17 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
       "dropoff_address": dropOff.placeName,
     };
 
-    rideRequestRef!.push().set(riderInfoMap);
+    rideRequestRef!.set(riderInfoMap);
   }
 // end of save ride request
+
+// canselRideRequest
+
+  void cancelRideRquest() {
+    rideRequestRef!.remove();
+  }
+
+// end of cansel ride request
 
   void displayRequestRideContainer() {
     setState(() {
@@ -108,6 +117,7 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
       drawerOpen = true;
       searchContainerHeight = 250;
       rideDetailsContainerHeight = 0.0;
+      requestRideContainerHeight = 0.0;
       BottompaddingOfMap = 255;
 
       polyLineSet.clear();
@@ -561,17 +571,24 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
                       SizedBox(
                         height: 12.0,
                       ),
-                      Container(
-                        height: 60.0,
-                        width: 60.0,
-                        decoration: BoxDecoration(
-                          color: Color.fromRGBO(252, 249, 64, 1),
-                          borderRadius: BorderRadius.circular(26.0),
-                          border: Border.all(width: 2.0, color: Colors.black),
-                        ),
-                        child: Icon(
-                          Icons.close,
-                          size: 26.0,
+                      GestureDetector(
+                        onTap: () {
+                          //canseling ride request and resting app
+                          cancelRideRquest();
+                          resetApp();
+                        },
+                        child: Container(
+                          height: 60.0,
+                          width: 60.0,
+                          decoration: BoxDecoration(
+                            color: Color.fromRGBO(252, 249, 64, 1),
+                            borderRadius: BorderRadius.circular(26.0),
+                            border: Border.all(width: 2.0, color: Colors.black),
+                          ),
+                          child: Icon(
+                            Icons.close,
+                            size: 26.0,
+                          ),
                         ),
                       ),
                       SizedBox(
