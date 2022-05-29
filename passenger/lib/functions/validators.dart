@@ -12,7 +12,6 @@ greenMessenger(BuildContext context, String msg) {
 
 const colorizeColors = [
   Colors.black,
-  Colors.purple,
   Colors.blue,
   Colors.yellow,
   Colors.red,
@@ -20,6 +19,6 @@ const colorizeColors = [
 ];
 
 const colorizeTextStyle = TextStyle(
-  fontSize: 56.0,
-  fontFamily: 'Signatra',
+  fontSize: 35.0,
+  fontFamily: 'Brand Bold',
 );
