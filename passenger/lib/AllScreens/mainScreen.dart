@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer' as d;
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -13,6 +14,7 @@ import 'package:passenger/AllScreens/searchScreen.dart';
 import 'package:passenger/DataHandler/appData.dart';
 import 'package:passenger/allwidgets/progressWidget.dart';
 import 'package:passenger/assistance/assistanceMethods.dart';
+import 'package:passenger/functions/configMaps.dart';
 import 'package:passenger/functions/validators.dart';
 import 'package:provider/provider.dart';
 
@@ -45,6 +47,52 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
   double searchContainerHeight = 250.0;
   bool drawerOpen = true;
 
+  DatabaseReference? rideRequestRef;
+
+  // calling userinfo function to get user information
+
+  @override
+  void initState() {
+    // ignore: todo
+    // TODO: implement initState
+    super.initState();
+
+    assistanceMethods.getCurrentOnlineUserInformation();
+  }
+  // end of user info function
+
+  // saving ride request
+  void saveRideRequest() {
+    rideRequestRef = FirebaseDatabase.instance.ref().child("Ride Requests");
+    var pickUp = Provider.of<appData>(context, listen: false).pickUpLocation;
+    var dropOff = Provider.of<appData>(context, listen: false).dropOffLocation;
+
+    Map pickUpLocationMap = {
+      "latitude": pickUp!.lattitude.toString(),
+      "longitude": pickUp.longitude.toString()
+    };
+
+    Map dropOffLocationMap = {
+      "latitude": dropOff!.lattitude.toString(),
+      "longitude": dropOff.longitude.toString()
+    };
+
+    Map riderInfoMap = {
+      "driver_id": "waitting",
+      "payment_method": "cash",
+      "pickup": pickUpLocationMap,
+      "dropoff": dropOffLocationMap,
+      "created_at": DateTime.now().toString(),
+      "rider_name": userCurrentInfo!.name,
+      "rider_phone": userCurrentInfo!.phone,
+      "pickup_address": pickUp.placeName,
+      "dropoff_address": dropOff.placeName,
+    };
+
+    rideRequestRef!.push().set(riderInfoMap);
+  }
+// end of save ride request
+
   void displayRequestRideContainer() {
     setState(() {
       requestRideContainerHeight = 250.0;
@@ -52,6 +100,7 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
       BottompaddingOfMap = 255;
       drawerOpen = true;
     });
+    saveRideRequest();
   }
 
   resetApp() {

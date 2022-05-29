@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:passenger/DataHandler/appData.dart';
@@ -8,6 +10,8 @@ import 'package:passenger/functions/configMaps.dart';
 import 'package:passenger/models/address.dart';
 import 'package:passenger/models/directDetails.dart';
 import 'package:provider/provider.dart';
+
+import '../models/allUsers.dart';
 
 class assistanceMethods {
   static Future<String> searchCordinateAddress(
@@ -99,9 +103,15 @@ class assistanceMethods {
   }
 
   static void getCurrentOnlineUserInformation() async {
-    
+    firebaseUser = (await FirebaseAuth.instance.currentUser)!;
+    String userId = firebaseUser!.uid;
+    DatabaseReference reference =
+        FirebaseDatabase.instance.ref().child("Passengers").child(userId);
 
-
+    reference.once().then((value) => {
+          if (value.snapshot.value != null)
+            {userCurrentInfo = Users.fromSnapshot(value.snapshot)}
+        });
   }
 }
 
