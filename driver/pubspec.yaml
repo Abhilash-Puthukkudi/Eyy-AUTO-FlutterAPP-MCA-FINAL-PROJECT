@@ -29,6 +29,19 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  firebase_core: ^1.17.0
+  firebase_auth: ^3.3.18
+  firebase_database: ^9.0.14  
+  google_fonts: ^2.3.2
+  page_transition: ^2.0.5
+  google_maps_flutter: ^2.1.5
+  geolocator: ^8.2.1
+  http: ^0.13.4
+  provider: ^6.0.2
+  permission_handler: ^9.2.0
+  flutter_polyline_points: ^1.0.0
+  font_awesome_flutter: ^10.1.0
+  animated_text_kit: ^4.2.1
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -36,9 +49,14 @@ dependencies:
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
+  flutter_launcher_icons: "^0.9.2"
+  
   flutter_test:
     sdk: flutter
-
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "asset/driver.png"
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
@@ -58,7 +76,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
+  assets:
+    - images/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
