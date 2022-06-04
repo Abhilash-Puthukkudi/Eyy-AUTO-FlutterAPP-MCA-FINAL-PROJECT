@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:driver/AllScreens/autoInfoScreen.dart';
+import 'package:driver/functions/configMaps.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:driver/AllScreens/loginScreen.dart';
@@ -37,7 +39,7 @@ class _registrationScreenState extends State<registrationScreen> {
           children: [
             SizedBox(height: 70.0),
             Image(
-              image: AssetImage("images/icon.png"),
+              image: AssetImage("images/driver.png"),
               width: 390,
               height: 250,
               alignment: Alignment.center,
@@ -207,18 +209,19 @@ class _registrationScreenState extends State<registrationScreen> {
       if (firebaseUser != null) {
         // user created
 
-        Map PassengerDataMap = {
+        Map driverDataMap = {
           "name": name,
           "phone": phonenumber,
-          "email": email
+          "email": email,
+          "status": 'waiting'
         };
 
-        passengerRef.child(firebaseUser.uid).set(PassengerDataMap);
+        driverRef.child(firebaseUser.uid).set(driverDataMap);
+        currentFirebaseUSer = firebaseUser;
         Navigator.pop(context);
         greenMessenger(context,
             "Congratulations your account has been created sucessfully. Please login to continue.");
-        Navigator.pushNamedAndRemoveUntil(
-            context, loginScreen.idScreen, (route) => false);
+        Navigator.pushNamed(context, AutoInfoScreen.idScreen);
       } else {
         Navigator.pop(context);
         redMessenger(context, "New passenger account not created");

@@ -1,3 +1,4 @@
+import 'package:driver/AllScreens/autoInfoScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -43,13 +44,15 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         title: 'Eyy-AUTO Driver',
         theme: ThemeData(primarySwatch: Colors.yellow),
-        initialRoute: FirebaseAuth.instance.currentUser == null
-            ? loginScreen.idScreen
-            : mainScreen.idScreen,
+        // initialRoute: FirebaseAuth.instance.currentUser == null
+        //     ? loginScreen.idScreen
+        //     : mainScreen.idScreen,
+        initialRoute: registrationScreen.idScreen,
         routes: {
           registrationScreen.idScreen: (context) => registrationScreen(),
           loginScreen.idScreen: (context) => loginScreen(),
-          mainScreen.idScreen: (context) => mainScreen()
+          mainScreen.idScreen: (context) => mainScreen(),
+          AutoInfoScreen.idScreen:(context) => AutoInfoScreen(),
         },
       ),
     );

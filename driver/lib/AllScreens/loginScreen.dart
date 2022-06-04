@@ -41,7 +41,7 @@ class _loginScreenState extends State<loginScreen> {
           children: [
             SizedBox(height: 70.0),
             Image(
-              image: AssetImage("images/icon.png"),
+              image: AssetImage("images/driver.png"),
               width: 390,
               height: 250,
               alignment: Alignment.center,
