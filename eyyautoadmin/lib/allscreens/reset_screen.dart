@@ -1,3 +1,4 @@
+import 'package:eyyautoadmin/allscreens/login_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -107,6 +108,22 @@ class _ResetPasswordscreenState extends State<ResetPasswordscreen> {
                       ),
                     ),
                   ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, loginScreen.idScreen, (route) => false);
+                      },
+                      child: Text(
+                        "Go back to login ",
+                        style: TextStyle(
+                            color: Colors.yellow,
+                            fontSize: 14.0,
+                            fontFamily: "Brand Bold"),
+                        textAlign: TextAlign.center,
+                      ))
                 ],
               ),
             ),

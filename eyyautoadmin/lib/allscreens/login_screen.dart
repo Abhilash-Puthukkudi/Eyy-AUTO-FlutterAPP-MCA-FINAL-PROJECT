@@ -1,3 +1,4 @@
+import 'package:eyyautoadmin/allscreens/reset_screen.dart';
 import 'package:eyyautoadmin/functions/validators.dart';
 import 'package:flutter/material.dart';
 
@@ -124,9 +125,8 @@ class _loginScreenState extends State<loginScreen> {
             ),
             TextButton(
                 onPressed: () {
-                  yellowMessenger(context, "comming soon");
-                  // Navigator.pushNamedAndRemoveUntil(
-                  //     context, registrationScreen.idScreen, (route) => false);
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, ResetPasswordscreen.idScreen, (route) => false);
                 },
                 child: Text(
                   "forgot Password? ",
