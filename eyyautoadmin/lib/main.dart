@@ -1,4 +1,5 @@
-import 'package:eyyautoadmin/login_screen.dart';
+import 'package:eyyautoadmin/allscreens/login_screen.dart';
+import 'package:eyyautoadmin/allscreens/reset_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -17,7 +18,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.yellow,
       ),
-      home: const loginScreen(),
+      home: const ResetPasswordscreen(),
+      routes: {
+        loginScreen.idScreen: (context) => loginScreen(),
+        ResetPasswordscreen.idScreen: (context) => ResetPasswordscreen()
+      },
     );
   }
 }

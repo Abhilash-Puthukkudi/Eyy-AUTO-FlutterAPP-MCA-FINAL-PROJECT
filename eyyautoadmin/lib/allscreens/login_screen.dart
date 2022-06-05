@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 class loginScreen extends StatefulWidget {
   const loginScreen({Key? key}) : super(key: key);
 
+  static const String idScreen = "loginscreen";
+
   @override
   State<loginScreen> createState() => _loginScreenState();
 }
