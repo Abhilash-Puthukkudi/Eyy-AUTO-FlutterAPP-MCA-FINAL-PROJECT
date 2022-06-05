@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 redMessenger(BuildContext context, String msg) {
@@ -27,3 +28,5 @@ const colorizeTextStyle = TextStyle(
   fontSize: 35.0,
   fontFamily: 'Brand Bold',
 );
+
+DatabaseReference adminRef = FirebaseDatabase.instance.ref().child("admin");
