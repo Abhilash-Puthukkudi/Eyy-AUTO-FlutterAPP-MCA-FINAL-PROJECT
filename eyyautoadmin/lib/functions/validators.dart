@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
@@ -30,3 +32,9 @@ const colorizeTextStyle = TextStyle(
 );
 
 DatabaseReference adminRef = FirebaseDatabase.instance.ref().child("admin");
+DatabaseReference passengerRef =
+    FirebaseDatabase.instance.ref().child("Passengers");
+DatabaseReference driverRef = FirebaseDatabase.instance.ref().child("drivers");
+late DatabaseReference searchRef;
+
+var users = [];

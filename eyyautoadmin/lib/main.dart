@@ -1,5 +1,7 @@
+import 'package:eyyautoadmin/allscreens/dashbord.dart';
 import 'package:eyyautoadmin/allscreens/login_screen.dart';
 import 'package:eyyautoadmin/allscreens/reset_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -24,12 +26,20 @@ class MyApp extends StatelessWidget {
       title: 'Eyy-AutoBooking',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        //  // Navigator.pushNamedAndRemoveUntil(context,
+        //     DashBord().idScreen, (route) => false) // Navigator.pushNamedAndRemoveUntil(context,
+        //     DashBord().idScreen, (route) => false) // Navigator.pushNamedAndRemoveUntil(context,
+        //     DashBord().idScreen, (route) => false)r.pushNamedAndRemoveUntil(context,
+        //     DashBord().idScreen, (route) => false)
         primarySwatch: Colors.yellow,
       ),
-      home: const loginScreen(),
+      initialRoute: FirebaseAuth.instance.currentUser == null
+          ? loginScreen.idScreen
+          : DashBord.idScreen,
       routes: {
-        loginScreen.idScreen: (context) => loginScreen(),
-        ResetPasswordscreen.idScreen: (context) => ResetPasswordscreen()
+        loginScreen.idScreen: (context) => const loginScreen(),
+        ResetPasswordscreen.idScreen: (context) => const ResetPasswordscreen(),
+        DashBord.idScreen: (context) => const DashBord()
       },
     );
   }

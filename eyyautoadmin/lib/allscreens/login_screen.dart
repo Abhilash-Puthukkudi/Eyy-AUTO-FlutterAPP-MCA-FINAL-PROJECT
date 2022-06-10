@@ -1,9 +1,9 @@
 import 'dart:developer';
 
+import 'package:eyyautoadmin/allscreens/dashbord.dart';
 import 'package:eyyautoadmin/allscreens/reset_screen.dart';
 import 'package:eyyautoadmin/functions/validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/progressWidget.dart';
@@ -244,6 +244,8 @@ class _loginScreenState extends State<loginScreen> {
                         if (adminMap!['role'] == 'admin')
                           {
                             yellowMessenger(context, "Welcome..!"),
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, DashBord.idScreen, (route) => false)
                           },
                       }
                     else
@@ -260,6 +262,8 @@ class _loginScreenState extends State<loginScreen> {
                   }
               });
         } catch (e) {
+
+          
           redMessenger(context, "invalid admin");
         }
       }

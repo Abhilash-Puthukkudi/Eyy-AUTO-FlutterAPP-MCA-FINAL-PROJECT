@@ -13,10 +13,10 @@ class _progressBarState extends State<progressBar> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: Colors.black,
+      backgroundColor: Color.fromARGB(255, 10, 7, 7),
       child: Container(
         margin: EdgeInsets.all(15.0),
-        width: double.infinity,
+        width: 500,
         decoration: BoxDecoration(
           color: Color.fromARGB(255, 10, 7, 7),
           borderRadius: BorderRadius.circular(6.0),
