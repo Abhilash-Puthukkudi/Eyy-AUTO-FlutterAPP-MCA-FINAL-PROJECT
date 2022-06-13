@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:html';
 
+import 'package:eyyautoadmin/models/drivers_data.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
@@ -10,40 +11,98 @@ import '../functions/validators.dart';
 class viewDrivers extends StatefulWidget {
   const viewDrivers({Key? key}) : super(key: key);
   static const String idScreen = "viewDrivers";
+
   @override
   State<viewDrivers> createState() => _viewDriversState();
 }
 
 class _viewDriversState extends State<viewDrivers> {
+  List<DriversData> _allDrivers = [];
+  List<DriversData> _foundedDrivers = [];
+
+  @override
+  void initState() {
+    getDrivers();
+    super.initState();
+  }
+
+  getDrivers() async {
+    DatabaseEvent snapshotEvent = await driverRef.once();
+    final drivers_data = snapshotEvent.snapshot.value as Map<dynamic, dynamic>;
+    List<DriversData> data = [];
+    drivers_data.forEach((key, value) {
+      data.add(DriversData.fromJson(value));
+      print(value);
+    });
+    print(_allDrivers);
+
+    setState(() {
+      _allDrivers = data;
+      _foundedDrivers = _allDrivers;
+    });
+  }
+
+  void _filterDrivers(String enteredKeyword) {
+    List<DriversData> results = [];
+    if (enteredKeyword.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = _allDrivers;
+    } else {
+      results = _allDrivers
+          .where((emp) => emp.name!
+              .toString()
+              .toLowerCase()
+              .contains(enteredKeyword.toLowerCase()))
+          .toList();
+      // we use the toLowerCase() method to make it case-insensitive
+    }
+
+    // Refresh the UI
+    setState(() {
+      _foundedDrivers = results;
+    });
+  }
+
   TextEditingController searchTextcontroller = TextEditingController();
+  DatabaseReference? searchref;
   @override
   Widget build(BuildContext context) {
     return Wrap(children: [
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const SizedBox(
-            height: 30,
-          ),
-          Row(
-            children: [
-              const SizedBox(
-                width: 550,
-              ),
-              Column(
-                children: [
-                  SizedBox(
-                    width: 500,
-                  ),
-                  Text("Drivers",
-                      style: TextStyle(
-                          color: Colors.yellow,
-                          fontFamily: "Brand Bold",
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold)),
-                  Container(
-                    width: 500,
-                    child: TextField(
+      Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        const SizedBox(
+          height: 30,
+        ),
+        Row(
+          children: [
+            const SizedBox(
+              width: 400,
+            ),
+            Column(
+              children: [
+                SizedBox(
+                  width: 500,
+                ),
+                Text("Drivers",
+                    style: TextStyle(
+                        color: Colors.yellow,
+                        fontFamily: "Brand Bold",
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold)),
+                Container(
+                  width: 500,
+                  child: ListTile(
+                    trailing: GestureDetector(
+                      onTap: () {},
+                      child: Icon(
+                        Icons.search,
+                        size: 30,
+                        color: Colors.yellow,
+                      ),
+                    ),
+                    title: TextField(
+                      onChanged: (value) {
+                        _filterDrivers(value);
+                      },
                       controller: searchTextcontroller,
                       textAlign: TextAlign.center,
                       style:
@@ -57,72 +116,33 @@ class _viewDriversState extends State<viewDrivers> {
                               TextStyle(fontSize: 10.0, color: Colors.grey)),
                     ),
                   ),
-                ],
-              ),
-            ],
-          ),
-          SingleChildScrollView(
-            child: FirebaseAnimatedList(
-              query: driverRef,
-              shrinkWrap: true,
-              itemBuilder: (context, snapshot, animation, index) {
-                return GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    height: 180,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ListTile(
-                        shape: RoundedRectangleBorder(
-                          side: BorderSide(
-                            color: Colors.black,
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        tileColor: Colors.yellow,
-                        title: Row(
-                          children: [
-                            Text(
-                              (index + 1).toString(),
-                              style: TextStyle(
-                                  fontFamily: "Brand Bold",
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Icon(
-                              Icons.account_circle,
-                              size: 70,
-                              color: Colors.black,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              printDetails(context, snapshot, index),
-                              style: TextStyle(
-                                fontFamily: "Brand Bold",
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
+        ListView.separated(
+          shrinkWrap: true,
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+          itemCount: _foundedDrivers.length,
+          itemBuilder: (context, index) {
+            DriversData driver = _foundedDrivers[index];
+            return Container(
+                width: 100,
+                height: 100,
+                child: Text(driver.autoDetails!.licenceNumber.toString()));
+          },
+          separatorBuilder: (BuildContext context, int index) {
+            return const SizedBox(
+              height: 1,
+            );
+          },
+        ),
+      ]),
     ]);
   }
 
-  late Map DriverData;
+  Map DriverData = {};
   List mydatakeys = [];
   List mydatavalues = [];
   String printDetails(BuildContext context, DataSnapshot snapshot, int index) {
@@ -138,11 +158,4 @@ class _viewDriversState extends State<viewDrivers> {
     String phonenumber = data['phone'];
     return "NAME                            :  $name \nEMAIL                            :  $email  \nPHONE NUMBER      :  $phonenumber  \nAUTO NUMBER         :  $auto_number  \nLICENSE NUMBER   :  $license_number";
   }
-
-// int len = mydatakeys.length;
-//     for (int i = 0; i < len; i++) {
-//       DriverData[mydatakeys[i]] = mydatavalues[i];
-//     }
-//     print(DriverData);
-
 }

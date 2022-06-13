@@ -273,7 +273,7 @@ class _loginScreenState extends State<loginScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               backgroundColor: Colors.red,
-              content: Text("No user found for that email..")),
+              content: const Text("No user found for that email..")),
         );
         log('No user found for that email.');
       } else if (e.code == 'wrong-password') {

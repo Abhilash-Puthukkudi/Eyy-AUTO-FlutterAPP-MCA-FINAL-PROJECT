@@ -121,6 +121,7 @@ class dashboardHomeState extends State<dashboardHome> {
 
   void countCalculator() async {
     DataSnapshot passengerEvent = await passengerRef.get();
+    
     Map? passengers = passengerEvent.value as Map?;
     setState(() {
       passengerCount = passengers!.length;
