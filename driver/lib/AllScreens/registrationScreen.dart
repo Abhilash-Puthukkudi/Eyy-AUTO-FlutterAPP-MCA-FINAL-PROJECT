@@ -210,6 +210,7 @@ class _registrationScreenState extends State<registrationScreen> {
         // user created
 
         Map driverDataMap = {
+          "id": firebaseUser.id.toString(),
           "name": name,
           "phone": phonenumber,
           "email": email,
