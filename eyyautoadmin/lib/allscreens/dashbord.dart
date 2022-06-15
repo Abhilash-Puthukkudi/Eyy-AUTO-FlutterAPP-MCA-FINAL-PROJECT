@@ -1,6 +1,7 @@
 import 'package:eyyautoadmin/allscreens/dashbord_home_screen.dart';
 import 'package:eyyautoadmin/allscreens/login_screen.dart';
 import 'package:eyyautoadmin/allscreens/manage_drivers_screen.dart';
+import 'package:eyyautoadmin/allscreens/new_drivers.dart';
 import 'package:eyyautoadmin/allscreens/view_drivers_screen.dart';
 import 'package:eyyautoadmin/allscreens/view_passengers_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -38,9 +39,9 @@ class _DashBordState extends State<DashBord> {
           _selectedScreen = const viewDrivers();
         });
         break;
-      case manageDriver.idScreen:
+      case newDrivers.idScreen:
         setState(() {
-          _selectedScreen = const manageDriver();
+          _selectedScreen = const newDrivers();
         });
         break;
       case loginScreen.idScreen:
@@ -72,9 +73,9 @@ class _DashBordState extends State<DashBord> {
         iconColor: Colors.yellow,
         activeIconColor: Colors.black,
         activeBackgroundColor: Colors.yellow,
-        textStyle: TextStyle(
+        textStyle: const TextStyle(
             color: Colors.yellow, fontSize: 15, fontFamily: "Brand Bold"),
-        activeTextStyle: TextStyle(
+        activeTextStyle: const TextStyle(
             color: Colors.white,
             fontFamily: "Brand Bold",
             fontSize: 18,
@@ -92,9 +93,9 @@ class _DashBordState extends State<DashBord> {
               route: viewDrivers.idScreen,
               icon: Icons.emoji_people),
           AdminMenuItem(
-              title: 'Manage Drivers',
-              route: manageDriver.idScreen,
-              icon: Icons.settings),
+              title: 'New Driver Requests',
+              route: newDrivers.idScreen,
+              icon: Icons.fiber_new),
           AdminMenuItem(
             title: 'Logout',
             route: loginScreen.idScreen,

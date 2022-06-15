@@ -5,17 +5,19 @@ import 'package:flutter/material.dart';
 
 import '../functions/validators.dart';
 
-class viewDrivers extends StatefulWidget {
-  const viewDrivers({Key? key}) : super(key: key);
-  static const String idScreen = "viewDrivers";
+class newDrivers extends StatefulWidget {
+  const newDrivers({Key? key}) : super(key: key);
+  static const String idScreen = "newDrivers";
 
   @override
-  State<viewDrivers> createState() => _viewDriversState();
+  State<newDrivers> createState() => _newDriversState();
 }
 
-class _viewDriversState extends State<viewDrivers> {
+class _newDriversState extends State<newDrivers> {
   List<DriversData> _allDrivers = [];
   List<DriversData> _foundedDrivers = [];
+
+  bool acceptedOrDeclinedStatus = false;
 
   @override
   void initState() {
@@ -34,9 +36,21 @@ class _viewDriversState extends State<viewDrivers> {
     print(_allDrivers);
 
     setState(() {
-      _allDrivers = data;
+      _allDrivers = data
+          .where(
+              (emp) => emp.status!.toString().toLowerCase().contains("waiting"))
+          .toList();
       _foundedDrivers = _allDrivers;
     });
+    reloadData() {
+      setState(() {
+        _allDrivers = data
+            .where((emp) =>
+                emp.status!.toString().toLowerCase().contains("waiting"))
+            .toList();
+        _foundedDrivers = _allDrivers;
+      });
+    }
   }
 
   void _filterDrivers(String enteredKeyword) {
@@ -127,7 +141,8 @@ class _viewDriversState extends State<viewDrivers> {
             return Padding(
               padding: const EdgeInsets.fromLTRB(200, 8, 200, 8),
               child: Container(
-                  height: 320,
+                  //card size
+                  height: 390,
                   // color: Colors.yellow,
 
                   decoration: BoxDecoration(
@@ -243,6 +258,45 @@ class _viewDriversState extends State<viewDrivers> {
                                 )
                               ],
                             ),
+                          ),
+                          Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                    onPressed: () {
+                                      acceptDriver(
+                                          context,
+                                          driver.id,
+                                          driver.name,
+                                          driver.phone,
+                                          driver.email,
+                                          driver.autoDetails!.autoNumber,
+                                          driver.autoDetails!.licenceNumber);
+                                    },
+                                    child: Text("Accept"),
+                                    style: ElevatedButton.styleFrom(
+                                        primary: Colors.green,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 50, vertical: 20),
+                                        textStyle: TextStyle(
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.bold))),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                ElevatedButton(
+                                    onPressed: () {},
+                                    child: Text("Decline"),
+                                    style: ElevatedButton.styleFrom(
+                                        primary: Colors.red,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 50, vertical: 20),
+                                        textStyle: TextStyle(
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.bold)))
+                              ],
+                            ),
                           )
                         ],
                       ),
@@ -263,20 +317,38 @@ class _viewDriversState extends State<viewDrivers> {
     ]);
   }
 
-  // Map DriverData = {};
-  // List mydatakeys = [];
-  // List mydatavalues = [];
-  // String printDetails(BuildContext context, DataSnapshot snapshot, int index) {
-  //   mydatakeys.add(snapshot.key);
-  //   mydatavalues.add(snapshot.value);
+  void acceptDriver(
+      BuildContext context,
+      String? id,
+      String? name,
+      String? phone,
+      String? email,
+      String? autoNumber,
+      String? licenceNumber) async {
+    Map<String, Object?> driverDataMap = {
+      "id": id,
+      "name": name,
+      "phone": phone,
+      "email": email,
+      "status": 'ACCEPTED'
+    };
+    await driverRef.child(id.toString()).update(driverDataMap);
 
-  //   // print(mydatakeys.toString());
-  //   Map? data = snapshot.value as Map?;
-  //   String name = data!['name'];
-  //   String email = data['email'];
-  //   String auto_number = data['auto_Details']['auto_number'];
-  //   String license_number = data['auto_Details']['licence_number'];
-  //   String phonenumber = data['phone'];
-  //   return "NAME                            :  $name \nEMAIL                            :  $email  \nPHONE NUMBER      :  $phonenumber  \nAUTO NUMBER         :  $auto_number  \nLICENSE NUMBER   :  $license_number";
+    Map autoInfoMap = {
+      "auto_number": autoNumber,
+      "licence_number": licenceNumber
+    };
+
+    await driverRef.child(id.toString()).child("auto_Details").set(autoInfoMap);
+
+    getDrivers();
+  }
+
+  // void acceptDriver(BuildContext context, String? id) async {
+  //   DatabaseReference driverAccept = driverRef.child(id.toString());
+  //   await driverAccept.update({
+  //     "status": "ACCEPTED",
+  //   });
   // }
+
 }

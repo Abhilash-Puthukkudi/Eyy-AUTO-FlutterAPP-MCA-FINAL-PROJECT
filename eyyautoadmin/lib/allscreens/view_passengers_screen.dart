@@ -67,7 +67,7 @@ class _viewPassengersState extends State<viewPassengers> {
   Widget build(BuildContext context) {
     return Wrap(children: [
       Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        // mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const SizedBox(
             height: 30,
@@ -75,10 +75,10 @@ class _viewPassengersState extends State<viewPassengers> {
           Row(
             children: [
               const SizedBox(
-                width: 500,
+                width: 450,
               ),
               Container(
-                width: 500,
+                width: 400,
                 // child: TextField(
                 //   controller: searchTextController,
                 //   textAlign: TextAlign.center,
@@ -133,50 +133,89 @@ class _viewPassengersState extends State<viewPassengers> {
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 final passenger = _filteredPassengers[index];
-                return Container(
-                  height: 130,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListTile(
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          color: Colors.black,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(200, 8, 200, 8),
+                  child: Container(
+                      height: 250,
+                      // color: Colors.yellow,
+
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.yellowAccent),
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.yellow,
                       ),
-                      tileColor: Colors.yellow,
-                      title: Row(
+                      child: Column(
+                        // ignore: prefer_const_literals_to_create_immutables
                         children: [
-                          Text(
-                            (index + 1).toString(),
-                            style: TextStyle(
-                                fontFamily: "Brand Bold",
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Icon(
+                          const Icon(
                             Icons.account_circle,
-                            size: 70,
+                            size: 100,
                             color: Colors.black,
                           ),
-                          SizedBox(
-                            width: 10,
+                          const Divider(
+                            thickness: 0.5,
+                            color: Colors.black,
                           ),
-                          Text(
-                            passenger.name.toString(),
-                            style: TextStyle(
-                              fontFamily: "Brand Bold",
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )
+                          Column(
+                            children: [
+                              Text(
+                                passenger.name.toString(),
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 28.0,
+                                    fontFamily: "Brand Bold"),
+                              ),
+                              Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.phone,
+                                      color: Colors.black,
+                                      size: 30,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      passenger.phone.toString(),
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 28.0,
+                                          fontFamily: "Brand Bold"),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.email,
+                                      color: Colors.black,
+                                      size: 30,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      passenger.email.toString(),
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 28.0,
+                                          fontFamily: "Brand Bold"),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
                         ],
-                      ),
-                    ),
-                  ),
+                      )),
                 );
               },
               separatorBuilder: (BuildContext context, int index) {
