@@ -29,13 +29,17 @@ class _viewDriversState extends State<viewDrivers> {
     List<DriversData> data = [];
     drivers_data.forEach((key, value) {
       data.add(DriversData.fromJson(value));
-      print(value);
+      // print(value);
     });
     print(_allDrivers);
 
     setState(() {
-      _allDrivers = data;
+      _allDrivers = data
+          .where((driver) =>
+              driver.status.toString().toLowerCase().contains('accepted'))
+          .toList();
       _foundedDrivers = _allDrivers;
+      print(_foundedDrivers);
     });
   }
 

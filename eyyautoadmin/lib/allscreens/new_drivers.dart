@@ -1,4 +1,5 @@
 import 'package:eyyautoadmin/models/drivers_data.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
@@ -286,7 +287,45 @@ class _newDriversState extends State<newDrivers> {
                                   width: 10,
                                 ),
                                 ElevatedButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text('AlertDialog Title'),
+                                              content: SingleChildScrollView(
+                                                child: Column(
+                                                  children: <Widget>[
+                                                    Text(
+                                                        'Are you sure want to decline this Driver Request?'),
+                                                  ],
+                                                ),
+                                              ),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  child: Text('Confirm'),
+                                                  onPressed: () {
+                                                    declineDriver(
+                                                        context,
+                                                        driver.id,
+                                                        driver.password,
+                                                        driver.email);
+                                                    print('Confirmed');
+                                                    Navigator.of(context).pop();
+                                                    getDrivers();
+                                                  },
+                                                ),
+                                                TextButton(
+                                                  child: Text('Cancel'),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                    getDrivers();
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          });
+                                    },
                                     child: Text("Decline"),
                                     style: ElevatedButton.styleFrom(
                                         primary: Colors.red,
@@ -330,7 +369,7 @@ class _newDriversState extends State<newDrivers> {
       "name": name,
       "phone": phone,
       "email": email,
-      "status": 'ACCEPTED'
+      "status": 'accepted'
     };
     await driverRef.child(id.toString()).update(driverDataMap);
 
@@ -342,6 +381,20 @@ class _newDriversState extends State<newDrivers> {
     await driverRef.child(id.toString()).child("auto_Details").set(autoInfoMap);
 
     getDrivers();
+  }
+
+  void declineDriver(
+      BuildContext context, String? id, String? password, String? email) async {
+    try {
+      FirebaseAuth fbauth = FirebaseAuth.instance;
+      final User? firebaseuser = (await fbauth.signInWithEmailAndPassword(
+              email: email.toString(), password: password.toString()))
+          .user;
+      firebaseuser!.delete();
+      driverRef.child(id.toString()).remove();
+      redMessenger(context, "This Driver Request is Deleted");
+      getDrivers();
+    } catch (e) {}
   }
 
   // void acceptDriver(BuildContext context, String? id) async {

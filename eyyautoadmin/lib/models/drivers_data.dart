@@ -16,7 +16,8 @@ class DriversData {
       this.name,
       this.phone,
       this.status,
-      this.id});
+      this.id,
+      this.password});
 
   AutoDetails? autoDetails;
   String? email;
@@ -24,6 +25,7 @@ class DriversData {
   String? phone;
   String? status;
   String? id;
+  String? password;
 
   factory DriversData.fromJson(Map<String, dynamic> json) => DriversData(
       autoDetails: AutoDetails.fromJson(json["auto_Details"]),
@@ -31,7 +33,8 @@ class DriversData {
       name: json["name"],
       phone: json["phone"],
       status: json["status"],
-      id: json["id"]);
+      id: json["id"],
+      password: json["password"]);
 
   Map<String, dynamic> toJson() => {
         "auto_Details": autoDetails!.toJson(),
@@ -39,7 +42,8 @@ class DriversData {
         "name": name,
         "phone": phone,
         "status": status,
-        "id": id
+        "id": id,
+        "password": password
       };
 }
 
