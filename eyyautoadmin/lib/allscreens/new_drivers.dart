@@ -311,15 +311,15 @@ class _newDriversState extends State<newDrivers> {
                                                         driver.password,
                                                         driver.email);
                                                     print('Confirmed');
-                                                    Navigator.of(context).pop();
                                                     getDrivers();
+                                                    Navigator.of(context).pop();
                                                   },
                                                 ),
                                                 TextButton(
                                                   child: Text('Cancel'),
                                                   onPressed: () {
-                                                    Navigator.of(context).pop();
                                                     getDrivers();
+                                                    Navigator.of(context).pop();
                                                   },
                                                 ),
                                               ],
@@ -393,8 +393,8 @@ class _newDriversState extends State<newDrivers> {
       firebaseuser!.delete();
       driverRef.child(id.toString()).remove();
       redMessenger(context, "This Driver Request is Deleted");
-      getDrivers();
     } catch (e) {}
+    getDrivers();
   }
 
   // void acceptDriver(BuildContext context, String? id) async {
