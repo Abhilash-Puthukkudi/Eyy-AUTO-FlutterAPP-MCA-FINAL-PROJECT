@@ -47,12 +47,12 @@ class _MyAppState extends State<MyApp> {
         // initialRoute: FirebaseAuth.instance.currentUser == null
         //     ? loginScreen.idScreen
         //     : mainScreen.idScreen,
-        initialRoute: registrationScreen.idScreen,
+        initialRoute: mainScreen.idScreen,
         routes: {
           registrationScreen.idScreen: (context) => registrationScreen(),
           loginScreen.idScreen: (context) => loginScreen(),
           mainScreen.idScreen: (context) => mainScreen(),
-          AutoInfoScreen.idScreen:(context) => AutoInfoScreen(),
+          AutoInfoScreen.idScreen: (context) => AutoInfoScreen(),
         },
       ),
     );
