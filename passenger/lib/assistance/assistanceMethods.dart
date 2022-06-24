@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -21,9 +22,9 @@ class assistanceMethods {
 
     String url =
         "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=$mapkey";
-    log(url);
+    // log(url);
     var response = await requestAssistant.getRequest(url);
-    log(position.latitude.toString());
+    // log(position.latitude.toString());
     if (response != "failed") {
       String res = response["results"][0]["formatted_address"];
 
@@ -112,6 +113,12 @@ class assistanceMethods {
           if (value.snapshot.value != null)
             {userCurrentInfo = Users.fromSnapshot(value.snapshot)}
         });
+  }
+
+  static double createRandomNumber(int number) {
+    var random = Random();
+    int ranNumber = random.nextInt(number);
+    return ranNumber.toDouble();
   }
 }
 

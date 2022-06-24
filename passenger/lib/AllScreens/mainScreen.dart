@@ -15,8 +15,10 @@ import 'package:passenger/AllScreens/searchScreen.dart';
 import 'package:passenger/DataHandler/appData.dart';
 import 'package:passenger/allwidgets/progressWidget.dart';
 import 'package:passenger/assistance/assistanceMethods.dart';
+import 'package:passenger/assistance/geoFireAssistant.dart';
 import 'package:passenger/functions/configMaps.dart';
 import 'package:passenger/functions/validators.dart';
+import 'package:passenger/models/nearByAvilableDrivers.dart';
 import 'package:provider/provider.dart';
 
 class mainScreen extends StatefulWidget {
@@ -48,7 +50,10 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
   double searchContainerHeight = 250.0;
   bool drawerOpen = true;
 
+  bool nearbyAvilableDriverKeysLoaded = false;
+
   DatabaseReference? rideRequestRef;
+  BitmapDescriptor? nearByIcon;
 
   // calling userinfo function to get user information
 
@@ -163,6 +168,8 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
 
     d.log("adress is $address");
     d.log(address);
+
+    initGeoFireListner();
   }
 
 //
@@ -177,6 +184,7 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    createIconMarker();
     return SafeArea(
       child: Scaffold(
         body: Stack(
@@ -754,18 +762,38 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
 
         switch (callBack) {
           case Geofire.onKeyEntered:
+            NearByAvilableDrivers nearByAvilableDrivers =
+                NearByAvilableDrivers();
+            nearByAvilableDrivers.key = map['key'];
+            nearByAvilableDrivers.latitude = map['latitude'];
+            nearByAvilableDrivers.longitude = map['longitude'];
+            GeoFireAssistant.nearByAvilableDriversList
+                .add(nearByAvilableDrivers);
+            if (nearbyAvilableDriverKeysLoaded == true) {
+              updateAvilableDriversOnMap();
+            }
+
             break;
 
           case Geofire.onKeyExited:
+            GeoFireAssistant.removeDriverFromList(map['key']);
+            updateAvilableDriversOnMap();
             break;
 
           case Geofire.onKeyMoved:
             // Update your key's location
+            NearByAvilableDrivers nearByAvilableDrivers =
+                NearByAvilableDrivers();
+            nearByAvilableDrivers.key = map['key'];
+            nearByAvilableDrivers.latitude = map['latitude'];
+            nearByAvilableDrivers.longitude = map['longitude'];
+            GeoFireAssistant.updateDriverNearbyLocation(nearByAvilableDrivers);
+            updateAvilableDriversOnMap();
             break;
 
           case Geofire.onGeoQueryReady:
             // All Intial Data is loaded
-
+            updateAvilableDriversOnMap();
             break;
         }
       }
@@ -773,5 +801,39 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
       setState(() {});
     });
     // geofirecode block starts here
+  }
+
+  void updateAvilableDriversOnMap() {
+    setState(() {
+      markersSet.clear();
+    });
+    Set<Marker> tMarkers = Set<Marker>();
+
+    for (NearByAvilableDrivers driver
+        in GeoFireAssistant.nearByAvilableDriversList) {
+      LatLng driverAvilablePostion =
+          LatLng(driver.latitude!.toDouble(), driver.longitude!.toDouble());
+
+      Marker marker = Marker(
+          markerId: MarkerId('driver${driver.key}'),
+          position: driverAvilablePostion,
+          icon: nearByIcon as BitmapDescriptor,
+          rotation: assistanceMethods.createRandomNumber(360));
+
+      tMarkers.add(marker);
+    }
+    setState(() {
+      markersSet = tMarkers;
+    });
+  }
+
+  void createIconMarker() {
+    ImageConfiguration imageConfiguration =
+        createLocalImageConfiguration(context, size: Size(2, 2));
+    BitmapDescriptor.fromAssetImage(
+            imageConfiguration, "images/automarkerfinal.png")
+        .then((value) {
+      nearByIcon = value;
+    });
   }
 }
