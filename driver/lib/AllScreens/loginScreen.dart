@@ -164,9 +164,10 @@ class _loginScreenState extends State<loginScreen> {
       log("here reached");
 
       if (firebaseuser != null) {
-        passengerRef.child(firebaseuser.uid).once().then((value) => {
+        driverRef.child(firebaseuser.uid).once().then((value) => {
               if (value.snapshot.value != null)
                 {
+                  currentFirebaseUSer = firebaseuser,
                   Navigator.pop(context),
                   assistanceMethods.getCurrentOnlineUserInformation,
                   greenMessenger(context, "Welcome..!"),

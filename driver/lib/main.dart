@@ -1,12 +1,15 @@
 import 'package:driver/AllScreens/autoInfoScreen.dart';
+import 'package:driver/functions/configMaps.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:driver/AllScreens/loginScreen.dart';
 import 'package:driver/AllScreens/mainScreen.dart';
 import 'package:driver/AllScreens/registrationScreen.dart';
 import 'package:driver/DataHandler/appData.dart';
 import 'package:driver/functions/permissions.dart';
+import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
@@ -16,8 +19,15 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  currentFirebaseUSer = FirebaseAuth.instance.currentUser;
   runApp(const MyApp());
 }
+
+DatabaseReference rideRequestRef = FirebaseDatabase.instance
+    .ref()
+    .child("drivers")
+    .child(currentFirebaseUSer!.uid)
+    .child("newRide");
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -47,7 +57,9 @@ class _MyAppState extends State<MyApp> {
         // initialRoute: FirebaseAuth.instance.currentUser == null
         //     ? loginScreen.idScreen
         //     : mainScreen.idScreen,
-        initialRoute: mainScreen.idScreen,
+        initialRoute: FirebaseAuth.instance.currentUser == null
+            ? loginScreen.idScreen
+            : mainScreen.idScreen,
         routes: {
           registrationScreen.idScreen: (context) => registrationScreen(),
           loginScreen.idScreen: (context) => loginScreen(),

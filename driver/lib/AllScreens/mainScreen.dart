@@ -18,8 +18,10 @@ class _mainScreenState extends State<mainScreen>
   int selectedIndex = 0;
 
   void onItemClicked(int index) {
-    selectedIndex = index;
-    tabController!.index = selectedIndex;
+    setState(() {
+      selectedIndex = index;
+      tabController!.index = selectedIndex;
+    });
   }
 
   @override
@@ -59,15 +61,17 @@ class _mainScreenState extends State<mainScreen>
             label: "Rattings",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.verified_user_sharp),
             label: "Account",
           )
         ],
-        unselectedItemColor: Colors.black54,
+        unselectedItemColor: Colors.white,
+        backgroundColor: Colors.black,
         selectedItemColor: Colors.yellow,
         type: BottomNavigationBarType.fixed,
         selectedLabelStyle: TextStyle(fontSize: 12.0),
         showSelectedLabels: true,
+        currentIndex: selectedIndex,
         onTap: onItemClicked,
       ),
     );
