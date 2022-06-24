@@ -208,7 +208,7 @@ class _registrationScreenState extends State<registrationScreen> {
         // user created
 
         Map PassengerDataMap = {
-          "id": firebaseUser.id.toString(),
+          "id": firebaseUser.uid.toString(),
           "name": name,
           "phone": phonenumber,
           "email": email
