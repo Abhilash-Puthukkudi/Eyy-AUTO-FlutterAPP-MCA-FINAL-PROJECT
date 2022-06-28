@@ -36,7 +36,8 @@ class _viewDriversState extends State<viewDrivers> {
     setState(() {
       _allDrivers = data
           .where((driver) =>
-              driver.status.toString().toLowerCase().contains('accepted'))
+              driver.status.toString().toLowerCase().contains('accepted') ||
+              driver.status.toString().toLowerCase().contains('suspended'))
           .toList();
       _foundedDrivers = _allDrivers;
       print(_foundedDrivers);
@@ -131,7 +132,7 @@ class _viewDriversState extends State<viewDrivers> {
             return Padding(
               padding: const EdgeInsets.fromLTRB(200, 8, 200, 8),
               child: Container(
-                  height: 320,
+                  height: 370,
                   // color: Colors.yellow,
 
                   decoration: BoxDecoration(
@@ -247,6 +248,44 @@ class _viewDriversState extends State<viewDrivers> {
                                 )
                               ],
                             ),
+                          ),
+                          Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                    onPressed: () {
+                                      suspendDriver(
+                                          context,
+                                          driver.id,
+                                          driver.status,
+                                          driver.name,
+                                          driver.phone,
+                                          driver.email,
+                                          driver.autoDetails!.autoNumber,
+                                          driver.autoDetails!.licenceNumber);
+                                    },
+                                    child: driver.status == 'accepted'
+                                        ? Text(
+                                            "suspend",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          )
+                                        : Text(
+                                            "unsuspend",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                    style: ElevatedButton.styleFrom(
+                                        primary: Colors.black,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 50, vertical: 20),
+                                        textStyle: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.bold))),
+                              ],
+                            ),
                           )
                         ],
                       ),
@@ -265,6 +304,41 @@ class _viewDriversState extends State<viewDrivers> {
         ),
       ]),
     ]);
+  }
+
+  Future<void> suspendDriver(
+      BuildContext context,
+      String? id,
+      String? status,
+      String? name,
+      String? phone,
+      String? email,
+      String? autoNumber,
+      String? licenceNumber) async {
+    String? status_fun;
+    if (status == 'accepted') {
+      status_fun = "suspended";
+    } else {
+      status_fun = "accepted";
+    }
+
+    Map<String, Object?> driverDataMap = {
+      "id": id,
+      "name": name,
+      "phone": phone,
+      "email": email,
+      "status": status_fun
+    };
+    await driverRef.child(id.toString()).update(driverDataMap);
+
+    Map autoInfoMap = {
+      "auto_number": autoNumber,
+      "licence_number": licenceNumber
+    };
+
+    await driverRef.child(id.toString()).child("auto_Details").set(autoInfoMap);
+
+    getDrivers();
   }
 
   // Map DriverData = {};
