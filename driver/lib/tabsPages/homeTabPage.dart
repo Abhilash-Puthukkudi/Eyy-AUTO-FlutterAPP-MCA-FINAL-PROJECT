@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:driver/functions/validators.dart';
 import 'package:driver/main.dart';
+import 'package:driver/notifications/pushNotifictionService.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:geolocator/geolocator.dart';
@@ -52,6 +54,21 @@ class _homeTabState extends State<homeTab> {
   Color driverStatusColor = Colors.black;
   Color driverStatusBorderColor = Colors.red;
   bool isDriverAvilable = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    print("init state block excecuted");
+    super.initState();
+    getCurrentDriverInfo();
+  }
+
+  void getCurrentDriverInfo() async {
+    currentFirebaseUSer = await FirebaseAuth.instance.currentUser;
+    PushNotficationService pushNotficationService = PushNotficationService();
+    pushNotficationService.initialize();
+    pushNotficationService.getToken();
+  }
 
   @override
   Widget build(BuildContext context) {

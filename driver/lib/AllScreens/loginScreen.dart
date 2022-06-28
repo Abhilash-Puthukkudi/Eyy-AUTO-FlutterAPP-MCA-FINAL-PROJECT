@@ -164,15 +164,32 @@ class _loginScreenState extends State<loginScreen> {
       log("here reached");
 
       if (firebaseuser != null) {
+        Map driverMAp;
         driverRef.child(firebaseuser.uid).once().then((value) => {
               if (value.snapshot.value != null)
                 {
-                  currentFirebaseUSer = firebaseuser,
-                  Navigator.pop(context),
-                  assistanceMethods.getCurrentOnlineUserInformation,
-                  greenMessenger(context, "Welcome..!"),
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, mainScreen.idScreen, (route) => false)
+                  // condition for login
+                  driverMAp = value.snapshot.value as Map,
+                  if (driverMAp.containsKey('status'))
+                    {
+                      if (driverMAp['status'] == 'accepted')
+                        {
+                          currentFirebaseUSer = firebaseuser,
+                          Navigator.pop(context),
+                          assistanceMethods.getCurrentOnlineUserInformation,
+                          greenMessenger(context, "Welcome..!"),
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, mainScreen.idScreen, (route) => false)
+                        }
+                      else
+                        {
+                          Navigator.pop(context),
+                          redMessenger(context,
+                              "Sorry You cant Login At this momment contact admin for details!")
+                        }
+                    }
+
+                  // condition for logn end
                 }
               else
                 {
