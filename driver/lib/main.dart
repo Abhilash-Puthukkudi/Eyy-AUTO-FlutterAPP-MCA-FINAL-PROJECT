@@ -1,8 +1,12 @@
+import 'dart:developer';
+
 import 'package:driver/AllScreens/autoInfoScreen.dart';
 import 'package:driver/functions/configMaps.dart';
+import 'package:driver/notifications/pushNotifictionService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:driver/AllScreens/loginScreen.dart';
 import 'package:driver/AllScreens/mainScreen.dart';
@@ -20,6 +24,24 @@ Future<void> main() async {
   );
 
   currentFirebaseUSer = FirebaseAuth.instance.currentUser;
+  FirebaseMessaging.onMessage.listen((RemoteMessage event) {
+    PushNotficationService pushNotficationService = PushNotficationService();
+    // pushNotficationService.getRideRequestId(event.data['ride__request_id']);
+    pushNotficationService.retriveRideRequestInfo(pushNotficationService
+        .getRideRequestId(event.data['ride__request_id']));
+    print("message recieved");
+    log("onmessaged clicked");
+
+    print(event.notification!.body);
+  });
+  FirebaseMessaging.onMessageOpenedApp.listen((message) {
+    // log("ride request ID : " + message.data['ride__request_id']);
+    PushNotficationService pushNotficationService = PushNotficationService();
+    pushNotficationService.retriveRideRequestInfo(pushNotficationService
+        .getRideRequestId(message.data['ride__request_id']));
+    ;
+    log("onmessagedopend app clicked");
+  });
   runApp(const MyApp());
 }
 

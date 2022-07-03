@@ -185,7 +185,7 @@ class _loginScreenState extends State<loginScreen> {
                         {
                           Navigator.pop(context),
                           redMessenger(context,
-                              "Sorry You cant Login At this momment contact admin for details!")
+                              "Sorry You cant Login At this moment contact admin for details!")
                         }
                     }
 

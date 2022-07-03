@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:driver/tabsPages/earnigsTabPage.dart';
 import 'package:driver/tabsPages/homeTabPage.dart';
 import 'package:driver/tabsPages/profileTabPage.dart';
 import 'package:driver/tabsPages/rattingTabPage.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 class mainScreen extends StatefulWidget {
@@ -28,6 +31,7 @@ class _mainScreenState extends State<mainScreen>
   void initState() {
     // TODO: implement initState
     super.initState();
+   
     tabController = new TabController(length: 4, vsync: this);
   }
 
