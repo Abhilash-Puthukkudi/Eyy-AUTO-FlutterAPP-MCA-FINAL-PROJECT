@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:driver/AllScreens/newRideScreen.dart';
 import 'package:driver/functions/firebaseReferances.dart';
 import 'package:driver/functions/validators.dart';
 import 'package:driver/main.dart';
@@ -108,6 +111,7 @@ class NotificationDialouge extends StatelessWidget {
                   ElevatedButton(
                       onPressed: () {
                         assetAudioPlayer.stop();
+                        checkAvilabilityOfRide(context);
                         // Navigator.pop(context);
                       },
                       child: Text("Accept"),
@@ -145,15 +149,23 @@ class NotificationDialouge extends StatelessWidget {
     // Map DriverReq;
     String theRideID = "";
     rideRequestRef.once().then((dataSnapshot) {
+      Navigator.pop(context);
+      log("RIDE REQUEST REF : " + dataSnapshot.snapshot.value.toString());
       if (dataSnapshot.snapshot.value != null) {
         // DriverReq = dataSnapshot.snapshot.value as Map;
         theRideID = dataSnapshot.snapshot.value.toString();
       } else {
         redMessenger(context, "RIDE NOT EXISTS!!");
       }
-
+      log("ride id : " + theRideID);
       if (theRideID == rideDetails!.rideRequest_id) {
         rideRequestRef.set("accepted");
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: ((context) => newRideScreen(
+                      rideDetails: rideDetails,
+                    ))));
       } else if (theRideID == "cancelled") {
         redMessenger(context, "Ride Has been Cancelld");
       } else if (theRideID == "timeout") {
