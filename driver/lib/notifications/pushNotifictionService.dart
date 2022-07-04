@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:driver/functions/configMaps.dart';
 import 'package:driver/functions/firebaseReferances.dart';
 import 'package:driver/models/rideDetails.dart';
+import 'package:driver/notifications/notificationDialouge.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +13,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class PushNotficationService {
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+  late BuildContext homescreen_context;
 
-  Future initialize() async {
+  Future initialize(BuildContext context) async {
+    log("INITZALIED BLA BLA");
+    homescreen_context = context;
+    log("context Status :" + homescreen_context.toString());
     NotificationSettings settings = await firebaseMessaging.requestPermission(
       alert: true,
       announcement: true,
@@ -91,6 +96,15 @@ class PushNotficationService {
         rideDetails.riderName = riderPhone;
         log("reached here");
         log("Informations  : " + (rideDetails.pickup_address as String));
+        log("Golobal home context : " + homeScreenContext.toString());
+        // showing ride request screen
+        showDialog(
+            context: homeScreenContext as BuildContext,
+            barrierDismissible: false,
+            builder: (BuildContext context) => NotificationDialouge(
+                  rideDetails: rideDetails,
+                ));
+        // ending showing ride request screen
       } else {
         log("error occurred");
       }

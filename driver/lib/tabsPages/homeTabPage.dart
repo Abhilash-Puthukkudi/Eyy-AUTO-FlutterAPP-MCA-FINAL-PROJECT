@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:driver/functions/firebaseReferances.dart';
 
 import '../functions/configMaps.dart';
 
@@ -66,7 +67,8 @@ class _homeTabState extends State<homeTab> {
   void getCurrentDriverInfo() async {
     currentFirebaseUSer = await FirebaseAuth.instance.currentUser;
     PushNotficationService pushNotficationService = PushNotficationService();
-    pushNotficationService.initialize();
+    homeScreenContext = context;
+    pushNotficationService.initialize(context);
     pushNotficationService.getToken();
   }
 
