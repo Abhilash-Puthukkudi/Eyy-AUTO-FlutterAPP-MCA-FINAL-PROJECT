@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:driver/AllScreens/autoInfoScreen.dart';
 import 'package:driver/functions/configMaps.dart';
 import 'package:driver/notifications/pushNotifictionService.dart';
@@ -16,6 +17,7 @@ import 'package:driver/functions/permissions.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
+import 'functions/firebaseReferances.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +31,7 @@ Future<void> main() async {
     // pushNotficationService.getRideRequestId(event.data['ride__request_id']);
     pushNotficationService.retriveRideRequestInfo(pushNotficationService
         .getRideRequestId(event.data['ride__request_id']));
+
     print("message recieved");
     log("onmessaged clicked");
 

@@ -179,6 +179,7 @@ class _homeTabState extends State<homeTab> {
     Geofire.initialize("availableDrivers");
     Geofire.setLocation(currentFirebaseUSer!.uid, currentPostiion!.latitude,
         currentPostiion!.longitude);
+    rideRequestRef.set("searching");
     rideRequestRef.onValue.listen((event) {});
   }
 

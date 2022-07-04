@@ -1,4 +1,8 @@
+import 'package:driver/functions/firebaseReferances.dart';
+import 'package:driver/functions/validators.dart';
+import 'package:driver/main.dart';
 import 'package:driver/models/rideDetails.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class NotificationDialouge extends StatelessWidget {
@@ -102,7 +106,10 @@ class NotificationDialouge extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        assetAudioPlayer.stop();
+                        // Navigator.pop(context);
+                      },
                       child: Text("Accept"),
                       style: ElevatedButton.styleFrom(
                           primary: Colors.green,
@@ -114,7 +121,10 @@ class NotificationDialouge extends StatelessWidget {
                     width: 10.0,
                   ),
                   ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        assetAudioPlayer.stop();
+                        Navigator.pop(context);
+                      },
                       child: Text("Decline"),
                       style: ElevatedButton.styleFrom(
                           primary: Colors.red,
@@ -129,5 +139,28 @@ class NotificationDialouge extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void checkAvilabilityOfRide(context) {
+    // Map DriverReq;
+    String theRideID = "";
+    rideRequestRef.once().then((dataSnapshot) {
+      if (dataSnapshot.snapshot.value != null) {
+        // DriverReq = dataSnapshot.snapshot.value as Map;
+        theRideID = dataSnapshot.snapshot.value.toString();
+      } else {
+        redMessenger(context, "RIDE NOT EXISTS!!");
+      }
+
+      if (theRideID == rideDetails!.rideRequest_id) {
+        rideRequestRef.set("accepted");
+      } else if (theRideID == "cancelled") {
+        redMessenger(context, "Ride Has been Cancelld");
+      } else if (theRideID == "timeout") {
+        redMessenger(context, "Ride has Timeout");
+      } else {
+        redMessenger(context, "RIDE NOT EXISTS!!");
+      }
+    });
   }
 }

@@ -1,25 +1,27 @@
 import 'dart:developer';
 
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:driver/functions/configMaps.dart';
 import 'package:driver/functions/firebaseReferances.dart';
 import 'package:driver/models/rideDetails.dart';
 import 'package:driver/notifications/notificationDialouge.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_messaging/firebase_messaging.dart' as noti;
 import 'package:flutter/material.dart';
 import 'dart:io' show Platform;
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class PushNotficationService {
-  FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+  noti.FirebaseMessaging firebaseMessaging = noti.FirebaseMessaging.instance;
   late BuildContext homescreen_context;
 
   Future initialize(BuildContext context) async {
     log("INITZALIED BLA BLA");
     homescreen_context = context;
     log("context Status :" + homescreen_context.toString());
-    NotificationSettings settings = await firebaseMessaging.requestPermission(
+    noti.NotificationSettings settings =
+        await firebaseMessaging.requestPermission(
       alert: true,
       announcement: true,
       badge: true,
@@ -65,6 +67,10 @@ class PushNotficationService {
     newRideRequestRef.child(rideRequestId).once().then((datasnapshot) {
       // log(datasnapshot.snapshot.value.toString());
       if (datasnapshot.snapshot.value != null) {
+        // adding notification sound
+        assetAudioPlayer.open(Audio("sounds/alert.mp3"));
+        assetAudioPlayer.play();
+        // end of sound
         rideRequestMap = datasnapshot.snapshot.value as Map;
 
         double pickUpLocationLat =
