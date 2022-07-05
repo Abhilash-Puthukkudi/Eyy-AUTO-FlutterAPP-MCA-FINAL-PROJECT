@@ -45,7 +45,7 @@ class _newRideScreenState extends State<newRideScreen> {
             bottom: 0.0,
             child: Container(
               decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Colors.yellow,
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(16.0),
                       topRight: Radius.circular(16.0)),
@@ -67,7 +67,7 @@ class _newRideScreenState extends State<newRideScreen> {
                       "10 minutes",
                       style: TextStyle(
                           fontFamily: "Brand Bold",
-                          fontSize: 14.0,
+                          fontSize: 18.0,
                           color: Colors.deepPurple),
                     ),
                     SizedBox(
@@ -154,14 +154,14 @@ class _newRideScreenState extends State<newRideScreen> {
                                     color: Colors.white),
                               ),
                               Icon(
-                                Icons.directions_walk,
+                                Icons.directions_railway_sharp,
                                 color: Colors.white,
                                 size: 26.0,
                               )
                             ],
                           ),
                           style: ElevatedButton.styleFrom(
-                              primary: Colors.blueAccent,
+                              primary: Colors.black,
                               padding: EdgeInsets.symmetric(
                                   horizontal: 30, vertical: 20),
                               textStyle: TextStyle(
