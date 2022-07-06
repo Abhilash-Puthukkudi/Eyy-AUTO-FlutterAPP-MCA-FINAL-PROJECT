@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:driver/DataHandler/appData.dart';
@@ -114,7 +115,20 @@ class assistanceMethods {
   //           {userCurrentInfo = Users.fromSnapshot(value.snapshot)}
   //       });
   // }
+
+// for making the driver unavilable till the ride completes
+  static void disablehomeTabLiveLocationUpdates() {
+    homeTabPageStreamSubscription!.pause();
+    Geofire.removeLocation(currentFirebaseUSer!.uid);
+  }
+
+  static void enablehomeTabLiveLocationUpdates() {
+    homeTabPageStreamSubscription!.resume();
+    Geofire.setLocation(currentFirebaseUSer!.uid, currentPostiion!.latitude,
+        currentPostiion!.longitude);
+  }
 }
+
 
 // st1 = response["results"][0]["address_components"][2]["long_name"]; //3
 // st2 = response["results"][0]["address_components"][4]["long_name"]; //4

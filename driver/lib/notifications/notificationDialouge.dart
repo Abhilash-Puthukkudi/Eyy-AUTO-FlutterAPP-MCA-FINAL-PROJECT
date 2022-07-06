@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:driver/AllScreens/newRideScreen.dart';
+import 'package:driver/assistance/assistanceMethods.dart';
 import 'package:driver/functions/firebaseReferances.dart';
 import 'package:driver/functions/validators.dart';
 import 'package:driver/main.dart';
@@ -160,6 +161,7 @@ class NotificationDialouge extends StatelessWidget {
       log("ride id : " + theRideID);
       if (theRideID == rideDetails!.rideRequest_id) {
         rideRequestRef.set("accepted");
+        assistanceMethods.disablehomeTabLiveLocationUpdates();
         Navigator.push(
             context,
             MaterialPageRoute(
