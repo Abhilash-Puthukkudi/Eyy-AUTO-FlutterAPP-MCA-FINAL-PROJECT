@@ -44,6 +44,8 @@ class _newRideScreenState extends State<newRideScreen> {
   BitmapDescriptor? animatingMarkerIcon;
 
   Position? myposition;
+  String status = "accepted";
+  String durationRide = " ";
 
   @override
   void initState() {
@@ -397,5 +399,25 @@ class _newRideScreenState extends State<newRideScreen> {
     };
 
     newRideRequestRef.child(rideRequestId).child("driver_location").set(locMap);
+  }
+
+  Future<void> updateRideDetails() async {
+    if (myposition == null) {
+      return;
+    }
+    var posLatLng = LatLng(myposition!.latitude, myposition!.longitude);
+    LatLng destinationLatLang;
+    if (status == "accepted") {
+      destinationLatLang = widget.rideDetails!.pickUp as LatLng;
+    } else {
+      destinationLatLang = widget.rideDetails!.dropOff as LatLng;
+    }
+    var directionDetails = await assistanceMethods.obtainPlaceDirectionDetails(
+        posLatLng, destinationLatLang);
+    if (directionDetails != null) {
+      setState(() {
+        durationRide = directionDetails.durationText.toString();
+      });
+    }
   }
 }
