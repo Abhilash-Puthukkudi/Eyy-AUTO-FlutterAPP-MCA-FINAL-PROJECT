@@ -15,6 +15,6 @@ Users? userCurrentInfo;
 User? currentFirebaseUSer;
 
 StreamSubscription<Position>? homeTabPageStreamSubscription;
-
+StreamSubscription<Position>? rideStreamSubscription;
 Position? currentPostiion;
 drivers? driversInformation;

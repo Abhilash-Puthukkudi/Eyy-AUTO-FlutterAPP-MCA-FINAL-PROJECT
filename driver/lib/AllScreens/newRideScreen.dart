@@ -8,6 +8,7 @@ import 'package:driver/functions/firebaseReferances.dart';
 import 'package:driver/models/rideDetails.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class newRideScreen extends StatefulWidget {
@@ -35,6 +36,14 @@ class _newRideScreenState extends State<newRideScreen> {
   PolylinePoints polylinePoints = PolylinePoints();
   double mapPaddingFromBotton = 0;
 
+  var geoLocator = Geolocator();
+  var locationOptions = LocationSettings(
+    accuracy: LocationAccuracy.bestForNavigation,
+  );
+  BitmapDescriptor? animatingMarkerIcon;
+
+  Position? myposition;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -42,8 +51,48 @@ class _newRideScreenState extends State<newRideScreen> {
     acceptRideRequest();
   }
 
+  void createIconMarker() {
+    ImageConfiguration imageConfiguration =
+        createLocalImageConfiguration(context, size: Size(2, 2));
+    BitmapDescriptor.fromAssetImage(
+            imageConfiguration, "images/automarkerfinal.png")
+        .then((value) {
+      animatingMarkerIcon = value;
+    });
+  }
+
+  void getRideLiveLocationupdates() {
+
+     
+
+    rideStreamSubscription =
+        Geolocator.getPositionStream().listen((Position position) {
+      currentPostiion = position;
+      myposition = position;
+      LatLng mPosition = LatLng(position.latitude, position.longitude);
+      Marker animatingMarker = Marker(
+          markerId: MarkerId("animating"),
+          position: mPosition,
+          icon: animatingMarkerIcon as BitmapDescriptor,
+          infoWindow: InfoWindow(title: "Current postion"));
+
+      setState(() {
+        CameraPosition cameraPosition =
+            new CameraPosition(target: mPosition, zoom: 17);
+        newRideGoogleMapController!
+            .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+
+        // adding animated marker with live updation first removing and then updating
+        markersSet
+            .removeWhere((marker) => marker.markerId.value == "animating");
+        markersSet.add(animatingMarker);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    createIconMarker();
     return SafeArea(
       child: Scaffold(
         body: Stack(
@@ -70,6 +119,8 @@ class _newRideScreenState extends State<newRideScreen> {
                 var pickupLatlang = widget.rideDetails!.pickUp;
                 await getPlaceDirection(
                     currentLatlang, pickupLatlang as LatLng);
+                // calling live location updating fucntion
+                getRideLiveLocationupdates();
               },
             ),
             Positioned(
