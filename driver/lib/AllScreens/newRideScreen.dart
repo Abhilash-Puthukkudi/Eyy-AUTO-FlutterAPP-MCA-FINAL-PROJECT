@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:driver/allwidgets/progressWidget.dart';
 import 'package:driver/assistance/assistanceMethods.dart';
+import 'package:driver/assistance/mapKitAssistant.dart';
 import 'package:driver/functions/configMaps.dart';
 import 'package:driver/functions/firebaseReferances.dart';
 import 'package:driver/models/rideDetails.dart';
@@ -62,18 +63,22 @@ class _newRideScreenState extends State<newRideScreen> {
   }
 
   void getRideLiveLocationupdates() {
-
-     
+    LatLng oldPos = LatLng(0, 0);
 
     rideStreamSubscription =
         Geolocator.getPositionStream().listen((Position position) {
       currentPostiion = position;
       myposition = position;
       LatLng mPosition = LatLng(position.latitude, position.longitude);
+
+      var rotation = MapKitAssistant.getMarkerRotaion(oldPos.latitude,
+          oldPos.longitude, mPosition.latitude, mPosition.longitude);
+
       Marker animatingMarker = Marker(
           markerId: MarkerId("animating"),
           position: mPosition,
           icon: animatingMarkerIcon as BitmapDescriptor,
+          rotation: rotation,
           infoWindow: InfoWindow(title: "Current postion"));
 
       setState(() {
