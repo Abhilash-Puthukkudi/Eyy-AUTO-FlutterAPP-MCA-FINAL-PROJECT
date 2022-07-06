@@ -99,7 +99,7 @@ class PushNotficationService {
         rideDetails.dropOff = LatLng(dropOffLocationLat, dropOffLocationLng);
         rideDetails.rideRequest_id = rideRequestId.toString();
         rideDetails.riderName = riderName;
-        rideDetails.riderName = riderPhone;
+        rideDetails.riderPhone = riderPhone;
         log("reached here");
         log("Informations  : " + (rideDetails.pickup_address as String));
         log("Golobal home context : " + homeScreenContext.toString());
