@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:driver/functions/validators.dart';
 import 'package:driver/main.dart';
+import 'package:driver/models/drivers.dart';
 import 'package:driver/notifications/pushNotifictionService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +30,6 @@ class _homeTabState extends State<homeTab> {
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
   );
-  Position? currentPostiion;
 
   var geoLocator = Geolocator();
   void locateposition() async {
@@ -66,6 +67,12 @@ class _homeTabState extends State<homeTab> {
 
   void getCurrentDriverInfo() async {
     currentFirebaseUSer = await FirebaseAuth.instance.currentUser;
+    driverRef.child(currentFirebaseUSer!.uid).once().then((datasnapshot) {
+      if (datasnapshot.snapshot.value != null) {
+        log("[homepagetap] getdriverinfo() : "+datasnapshot.snapshot.value.toString());
+        driversInformation = drivers.fromSnapshot(datasnapshot.snapshot);
+      }
+    });
     PushNotficationService pushNotficationService = PushNotficationService();
     homeScreenContext = context;
     pushNotficationService.initialize(context);

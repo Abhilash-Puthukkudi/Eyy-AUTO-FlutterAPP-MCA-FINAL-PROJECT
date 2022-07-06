@@ -176,7 +176,7 @@ class _loginScreenState extends State<loginScreen> {
                         {
                           currentFirebaseUSer = firebaseuser,
                           Navigator.pop(context),
-                          assistanceMethods.getCurrentOnlineUserInformation,
+                          // assistanceMethods.getCurrentOnlineUserInformation,
                           greenMessenger(context, "Welcome..!"),
                           Navigator.pushNamedAndRemoveUntil(
                               context, mainScreen.idScreen, (route) => false)

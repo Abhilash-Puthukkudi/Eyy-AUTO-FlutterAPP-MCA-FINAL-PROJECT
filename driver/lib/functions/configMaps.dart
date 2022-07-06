@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:driver/models/drivers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -14,3 +15,6 @@ Users? userCurrentInfo;
 User? currentFirebaseUSer;
 
 StreamSubscription<Position>? homeTabPageStreamSubscription;
+
+Position? currentPostiion;
+drivers? driversInformation;

@@ -14,40 +14,41 @@ import 'package:provider/provider.dart';
 import '../models/allUsers.dart';
 
 class assistanceMethods {
-  static Future<String> searchCordinateAddress(
-      Position position, context) async {
-    String placeAddress = '';
-    // String st1, st2, st3, st4;
+  // static Future<String> searchCordinateAddress(
+  //     Position position, context) async {
+  //   String placeAddress = '';
+  //   // String st1, st2, st3, st4;
 
-    String url =
-        "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=$mapkey";
-    log(url);
-    var response = await requestAssistant.getRequest(url);
-    log(position.latitude.toString());
-    if (response != "failed") {
-      String res = response["results"][0]["formatted_address"];
+  //   String url =
+  //       "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=$mapkey";
+  //   log(url);
+  //   var response = await requestAssistant.getRequest(url);
+  //   log(position.latitude.toString());
+  //   if (response != "failed") {
+  //     String res = response["results"][0]["formatted_address"];
 
-      List placeAddressList = res.split(",");
+  //     List placeAddressList = res.split(",");
 
-      placeAddress = placeAddressList[0] + " , " + placeAddressList[1];
+  //     placeAddress = placeAddressList[0] + " , " + placeAddressList[1];
 
-      Address passengerPickupadress = new Address();
-      passengerPickupadress.lattitude = position.latitude;
-      passengerPickupadress.longitude = position.longitude;
-      passengerPickupadress.placeName = placeAddress;
+  //     Address passengerPickupadress = new Address();
+  //     passengerPickupadress.lattitude = position.latitude;
+  //     passengerPickupadress.longitude = position.longitude;
+  //     passengerPickupadress.placeName = placeAddress;
 
-      Provider.of<appData>(context, listen: false)
-          .updatePickupLocationAddress(passengerPickupadress);
-    }
+  //     Provider.of<appData>(context, listen: false)
+  //         .updatePickupLocationAddress(passengerPickupadress);
+  //   }
 
-    return placeAddress;
-  }
+  //   return placeAddress;
+  // }
 
   static Future<DirectionDetails> obtainPlaceDirectionDetails(
       LatLng initialposition, LatLng finalposition) async {
     String DirectionURL =
         "https://maps.googleapis.com/maps/api/directions/json?origin=${initialposition.latitude},${initialposition.longitude}&destination=${finalposition.latitude},${finalposition.longitude}&key=$mapkey";
 
+    log("direction URL : " + DirectionURL);
     var res = await requestAssistant.getRequest(DirectionURL);
 
     if (res == "failed") {}
@@ -102,17 +103,17 @@ class assistanceMethods {
     return returnList;
   }
 
-  static void getCurrentOnlineUserInformation() async {
-    firebaseUser = (await FirebaseAuth.instance.currentUser)!;
-    String userId = firebaseUser!.uid;
-    DatabaseReference reference =
-        FirebaseDatabase.instance.ref().child("Passengers").child(userId);
+  // static void getCurrentOnlineUserInformation() async {
+  //   firebaseUser = (await FirebaseAuth.instance.currentUser)!;
+  //   String userId = firebaseUser!.uid;
+  //   DatabaseReference reference =
+  //       FirebaseDatabase.instance.ref().child("Passengers").child(userId);
 
-    reference.once().then((value) => {
-          if (value.snapshot.value != null)
-            {userCurrentInfo = Users.fromSnapshot(value.snapshot)}
-        });
-  }
+  //   reference.once().then((value) => {
+  //         if (value.snapshot.value != null)
+  //           {userCurrentInfo = Users.fromSnapshot(value.snapshot)}
+  //       });
+  // }
 }
 
 // st1 = response["results"][0]["address_components"][2]["long_name"]; //3
