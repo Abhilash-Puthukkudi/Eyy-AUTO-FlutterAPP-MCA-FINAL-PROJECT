@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:driver/allwidgets/collectFareDialouge.dart';
 import 'package:driver/allwidgets/progressWidget.dart';
 import 'package:driver/assistance/assistanceMethods.dart';
 import 'package:driver/assistance/mapKitAssistant.dart';
@@ -518,5 +519,38 @@ class _newRideScreenState extends State<newRideScreen> {
         .set(fareAmount.toString());
     newRideRequestRef.child(rideRequestID).child("status").set("ended");
     rideStreamSubscription!.cancel();
+
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) =>
+            CollectFareDialog(paymentMethod: "", fareAmount: fareAmount));
+
+    saveEarnings(fareAmount);
+  }
+
+  void saveEarnings(int fareAmount) {
+    driverRef
+        .child(currentFirebaseUSer!.uid)
+        .child("earnings")
+        .once()
+        .then((datasnapshot) {
+      if (datasnapshot.snapshot.value != null) {
+        double oldEarnings =
+            double.parse(datasnapshot.snapshot.value.toString());
+        double totalEarnings = oldEarnings + fareAmount;
+
+        driverRef
+            .child(currentFirebaseUSer!.uid)
+            .child("earnings")
+            .set(totalEarnings.toStringAsFixed(2));
+      } else {
+        double totalEarnings = fareAmount.toDouble();
+        driverRef
+            .child(currentFirebaseUSer!.uid)
+            .child("earnings")
+            .set(totalEarnings.toStringAsFixed(2));
+      }
+    });
   }
 }
