@@ -13,6 +13,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class newRideScreen extends StatefulWidget {
   // const newRideScreen({Key? key}) : super(key: key);
@@ -196,7 +197,12 @@ class _newRideScreenState extends State<newRideScreen> {
                           ),
                           Padding(
                               padding: EdgeInsets.only(right: 16.0),
-                              child: Icon(Icons.call)),
+                              child: GestureDetector(
+                                  onTap: () {
+                                    openDialPad(widget.rideDetails!.riderPhone
+                                        .toString());
+                                  },
+                                  child: Icon(Icons.call))),
                         ],
                       ),
                       SizedBox(
@@ -216,7 +222,7 @@ class _newRideScreenState extends State<newRideScreen> {
                           Expanded(
                               child: Container(
                             child: Text(
-                              "Chelavoor kozhikode 673571",
+                              widget.rideDetails!.pickup_address.toString(),
                               style: TextStyle(fontSize: 18.0),
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -240,7 +246,7 @@ class _newRideScreenState extends State<newRideScreen> {
                           Expanded(
                               child: Container(
                             child: Text(
-                              "kunnamnagalam,kozhikode,673571",
+                              widget.rideDetails!.dropoff_address.toString(),
                               style: TextStyle(fontSize: 18.0),
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -463,6 +469,12 @@ class _newRideScreenState extends State<newRideScreen> {
     };
 
     newRideRequestRef.child(rideRequestId).child("driver_location").set(locMap);
+
+    driverRef
+        .child(currentFirebaseUSer!.uid)
+        .child("history")
+        .child(rideRequestId)
+        .set(true);
   }
 
   Future<void> updateRideDetails() async {
@@ -552,5 +564,14 @@ class _newRideScreenState extends State<newRideScreen> {
             .set(totalEarnings.toStringAsFixed(2));
       }
     });
+  }
+
+  void openDialPad(String phoneNumber) async {
+    Uri url = Uri(scheme: "tel", path: phoneNumber);
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      print("Can't open dial pad.");
+    }
   }
 }
