@@ -840,4 +840,15 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
       nearByIcon = value;
     });
   }
+
+  void searchNearestDriver() {
+    if (avilableDrivers!.length == 0) {
+      cancelRideRquest();
+      resetApp();
+      return;
+    }
+
+    var driver = avilableDrivers![0];
+    avilableDrivers!.removeAt(0);
+  }
 }
