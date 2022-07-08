@@ -55,6 +55,8 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
   DatabaseReference? rideRequestRef;
   BitmapDescriptor? nearByIcon;
 
+  List<NearByAvilableDrivers>? avilableDrivers;
+
   // calling userinfo function to get user information
 
   @override
@@ -490,6 +492,8 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
                               onPressed: () {
                                 d.log("print");
                                 displayRequestRideContainer();
+                                avilableDrivers =
+                                    GeoFireAssistant.nearByAvilableDriversList;
                               },
                               child: Padding(
                                 padding: EdgeInsets.all(17.0),

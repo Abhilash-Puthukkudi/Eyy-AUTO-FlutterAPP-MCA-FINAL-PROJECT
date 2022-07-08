@@ -199,8 +199,8 @@ class _newRideScreenState extends State<newRideScreen> {
                               padding: EdgeInsets.only(right: 16.0),
                               child: GestureDetector(
                                   onTap: () {
-                                    openDialPad(widget.rideDetails!.riderPhone
-                                        .toString());
+                                    // openDialPad(widget.rideDetails!.riderPhone
+                                    //     .toString());
                                   },
                                   child: Icon(Icons.call))),
                         ],
@@ -566,12 +566,12 @@ class _newRideScreenState extends State<newRideScreen> {
     });
   }
 
-  void openDialPad(String phoneNumber) async {
-    Uri url = Uri(scheme: "tel", path: phoneNumber);
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url);
-    } else {
-      print("Can't open dial pad.");
-    }
-  }
+  // void openDialPad(String phoneNumber) async {
+  //   Uri url = Uri(scheme: "tel", path: phoneNumber);
+  //   if (await canLaunchUrl(url)) {
+  //     await launchUrl(url);
+  //   } else {
+  //     print("Can't open dial pad.");
+  //   }
+  // }
 }
