@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'dart:developer' as d;
+
+import 'package:http/http.dart' as html;
+
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -50,6 +53,7 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
   double rideDetailsContainerHeight = 0;
   double requestRideContainerHeight = 0;
   double searchContainerHeight = 250.0;
+  double driverDetailsContainerHeight = 0;
   bool drawerOpen = true;
 
   bool nearbyAvilableDriverKeysLoaded = false;
@@ -61,6 +65,8 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
   String state = "normal"; //ride request cansel case
 
   // calling userinfo function to get user information
+
+  StreamSubscription? rideStreamSubscription;
 
   @override
   void initState() {
@@ -102,6 +108,39 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
     };
 
     rideRequestRef!.set(riderInfoMap);
+
+    rideStreamSubscription = rideRequestRef!.onValue.listen((event) {
+      if (event.snapshot.value == null) {
+        return;
+      } else {
+        Map eventMap = event.snapshot.value as Map;
+        d.log(eventMap.toString());
+        if (eventMap["status"] != null) {
+          setState(() {
+            statusRide = eventMap["status"];
+          });
+        }
+        if (eventMap["auto_details"] != null) {
+          setState(() {
+            autoNumber = eventMap["auto_details"];
+          });
+        }
+        if (eventMap["driver_name"] != null) {
+          setState(() {
+            autoDriverName = eventMap["driver_name"];
+          });
+        }
+        if (eventMap["driver_phone"] != null) {
+          setState(() {
+            autoDriverPhone = eventMap["driver_phone"];
+            d.log(autoDriverPhone);
+          });
+        }
+        if (statusRide == "accepted") {
+          displayDriverDetailsContainer();
+        }
+      }
+    });
   }
 // end of save ride request
 
@@ -124,6 +163,16 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
       drawerOpen = true;
     });
     saveRideRequest();
+  }
+
+  void displayDriverDetailsContainer() {
+    setState(() {
+      requestRideContainerHeight = 0.0;
+      rideDetailsContainerHeight = 0.0;
+      BottompaddingOfMap = 280.0;
+      driverDetailsContainerHeight = 280.0;
+      drawerOpen = true;
+    });
   }
 
   resetApp() {
@@ -193,6 +242,7 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     createIconMarker();
+
     return SafeArea(
       child: Scaffold(
         body: Stack(
@@ -629,7 +679,137 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
                   ),
                 ),
               ),
-            )
+            ),
+            Positioned(
+                left: 0.0,
+                bottom: 0.0,
+                right: 0.0,
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(16.0),
+                          topRight: Radius.circular(16.0)),
+                      color: Color.fromARGB(255, 249, 246, 68),
+                      boxShadow: [
+                        BoxShadow(
+                            spreadRadius: 0.5,
+                            blurRadius: 16.0,
+                            color: Colors.black,
+                            offset: Offset(0.7, 0.7))
+                      ]),
+                  height: driverDetailsContainerHeight,
+                  child: Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 18.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 6.0,
+                        ),
+                        Row(children: [
+                          Text(
+                            rideStatusText,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 25.0, fontFamily: "Brand Bold"),
+                          ),
+                        ]),
+                        SizedBox(
+                          height: 22.0,
+                        ),
+                        Divider(
+                          height: 2.0,
+                          thickness: 2.0,
+                        ),
+                        Text(
+                          autoNumber,
+                          style: TextStyle(fontSize: 20, color: Colors.black),
+                        ),
+                        Text(
+                          autoDriverName,
+                          style: TextStyle(
+                              fontSize: 25.0, fontFamily: "Brand Bold"),
+                        ),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        Divider(
+                          height: 2.0,
+                          thickness: 2.0,
+                        ),
+                        SizedBox(
+                          height: 22.0,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  height: 55.0,
+                                  width: 55.0,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          width: 2.0, color: Colors.black),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(26.0),
+                                      )),
+                                  child: Icon(Icons.call),
+                                ),
+                                SizedBox(
+                                  height: 10.0,
+                                ),
+                                Text("Call"),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  height: 55.0,
+                                  width: 55.0,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          width: 2.0, color: Colors.black),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(26.0),
+                                      )),
+                                  child: Icon(Icons.list),
+                                ),
+                                SizedBox(
+                                  height: 10.0,
+                                ),
+                                Text("Details"),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  height: 55.0,
+                                  width: 55.0,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          width: 2.0, color: Colors.black),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(26.0),
+                                      )),
+                                  child: Icon(Icons.close),
+                                ),
+                                SizedBox(
+                                  height: 10.0,
+                                ),
+                                Text("Cancel"),
+                              ],
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ))
           ],
         ),
       ),
@@ -921,7 +1101,6 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
           }
         });
 
-        
 //time out case
         if (driverRequestTimeOut == 0) {
           driverRef
@@ -934,8 +1113,6 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
           // will assign new driver
           searchNearestDriver();
         }
-
-
       });
     });
   }
