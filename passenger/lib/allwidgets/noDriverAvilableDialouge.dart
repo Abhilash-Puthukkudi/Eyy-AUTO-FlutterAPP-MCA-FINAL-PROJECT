@@ -29,7 +29,13 @@ class noDriverAvilableDialouge extends StatelessWidget {
                   "No driver found ",
                   style: TextStyle(fontSize: 22.0, fontFamily: "Brand Bold"),
                 ),
-                SizedBox(height: 25),
+                SizedBox(height: 10),
+                Icon(
+                  FontAwesomeIcons.faceFrown,
+                  color: Colors.black,
+                  size: 45.0,
+                ),
+                SizedBox(height: 15),
                 Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
@@ -38,7 +44,7 @@ class noDriverAvilableDialouge extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  height: 30,
+                  height: 20,
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -49,7 +55,7 @@ class noDriverAvilableDialouge extends StatelessWidget {
                     child: Padding(
                       padding: EdgeInsets.all(17.0),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             "close",
@@ -58,11 +64,6 @@ class noDriverAvilableDialouge extends StatelessWidget {
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold),
                           ),
-                          Icon(
-                            FontAwesomeIcons.stop,
-                            color: Colors.black,
-                            size: 26.0,
-                          )
                         ],
                       ),
                     ),

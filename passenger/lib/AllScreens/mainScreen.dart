@@ -13,10 +13,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:passenger/AllScreens/loginScreen.dart';
 import 'package:passenger/AllScreens/searchScreen.dart';
 import 'package:passenger/DataHandler/appData.dart';
+import 'package:passenger/allwidgets/noDriverAvilableDialouge.dart';
 import 'package:passenger/allwidgets/progressWidget.dart';
 import 'package:passenger/assistance/assistanceMethods.dart';
 import 'package:passenger/assistance/geoFireAssistant.dart';
 import 'package:passenger/functions/configMaps.dart';
+import 'package:passenger/functions/firebaseReferances.dart';
 import 'package:passenger/functions/validators.dart';
 import 'package:passenger/models/nearByAvilableDrivers.dart';
 import 'package:provider/provider.dart';
@@ -56,6 +58,7 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
   BitmapDescriptor? nearByIcon;
 
   List<NearByAvilableDrivers>? avilableDrivers;
+  String state = "normal"; //ride request cansel case
 
   // calling userinfo function to get user information
 
@@ -106,6 +109,9 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
 
   void cancelRideRquest() {
     rideRequestRef!.remove();
+    setState(() {
+      state = "normal";
+    });
   }
 
 // end of cansel ride request
@@ -490,10 +496,13 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
                             padding: EdgeInsets.symmetric(horizontal: 16.0),
                             child: ElevatedButton(
                               onPressed: () {
-                                d.log("print");
+                                setState(() {
+                                  state = "requesting";
+                                });
                                 displayRequestRideContainer();
                                 avilableDrivers =
                                     GeoFireAssistant.nearByAvilableDriversList;
+                                searchNearestDriver();
                               },
                               child: Padding(
                                 padding: EdgeInsets.all(17.0),
@@ -841,14 +850,93 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
     });
   }
 
+  void noDriverFound() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => noDriverAvilableDialouge());
+  }
+
   void searchNearestDriver() {
     if (avilableDrivers!.length == 0) {
       cancelRideRquest();
       resetApp();
+
+      noDriverFound();
       return;
     }
 
     var driver = avilableDrivers![0];
+    notifyDriver(driver);
     avilableDrivers!.removeAt(0);
+  }
+
+  void notifyDriver(NearByAvilableDrivers driver) {
+    driverRef
+        .child(driver.key.toString())
+        .child("newRide")
+        .set(rideRequestRef!.key);
+
+    driverRef
+        .child(driver.key.toString())
+        .child("token")
+        .once()
+        .then((datasnapshot) {
+      if (datasnapshot.snapshot.value != null) {
+        String token = datasnapshot.snapshot.value.toString();
+
+        assistanceMethods.sendNotification(
+            token, context, rideRequestRef!.key.toString());
+      } else {
+        return;
+      }
+
+      const oneSecondPassed = Duration(seconds: 1);
+      var timer = Timer.periodic(oneSecondPassed, (timer) {
+        if (state != "requesting") {
+          driverRef
+              .child(driver.key.toString())
+              .child("newRide")
+              .set("cancelled");
+          driverRef.onDisconnect();
+          driverRequestTimeOut = 30;
+          timer.cancel();
+        }
+
+        driverRequestTimeOut = driverRequestTimeOut - 1;
+
+        setState(() {
+          d.log("timer : " + driverRequestTimeOut.toString());
+        });
+//accepted case
+        driverRef
+            .child(driver.key.toString())
+            .child("newRide")
+            .onValue
+            .listen((event) {
+          if (event.snapshot.value.toString() == "accepted") {
+            driverRef.onDisconnect();
+            driverRequestTimeOut = 30;
+            timer.cancel();
+          }
+        });
+
+        
+//time out case
+        if (driverRequestTimeOut == 0) {
+          driverRef
+              .child(driver.key.toString())
+              .child("newRide")
+              .set("timeout");
+          driverRef.onDisconnect();
+          driverRequestTimeOut = 30;
+          timer.cancel();
+          // will assign new driver
+          searchNearestDriver();
+        }
+
+
+      });
+    });
   }
 }

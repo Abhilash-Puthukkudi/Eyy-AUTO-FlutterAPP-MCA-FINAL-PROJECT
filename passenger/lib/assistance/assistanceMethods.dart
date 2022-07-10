@@ -1,10 +1,12 @@
-import 'dart:developer';
+import 'dart:convert';
+import 'dart:developer' as dev;
 import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart' as http;
 import 'package:passenger/DataHandler/appData.dart';
 import 'package:passenger/assistance/requestAssistance.dart';
 import 'package:passenger/functions/configMaps.dart';
@@ -14,6 +16,8 @@ import 'package:provider/provider.dart';
 
 import '../models/allUsers.dart';
 
+// assistant method class conatain all the REST API & Google API Handling functions
+// and Distance,fare,time calculating functions map handling functions
 class assistanceMethods {
   static Future<String> searchCordinateAddress(
       Position position, context) async {
@@ -119,6 +123,43 @@ class assistanceMethods {
     var random = Random();
     int ranNumber = random.nextInt(number);
     return ranNumber.toDouble();
+  }
+
+  static sendNotification(String token, context, String ride_request_id) async {
+    var destination =
+        Provider.of<appData>(context, listen: false).dropOffLocation;
+    Map<String, String> headerMap = {
+      'Content-Type': 'application/json',
+      'Authorization': SERVER_KEY,
+    };
+
+    Map notificationMap = {
+      'body': 'Dropoff Address,${destination!.placeName}',
+      'title': 'New Ride Request',
+    };
+
+    Map dataMap = {
+      "click_action": "FLUTTER_NOTIFICATION_CLICK",
+      "id": "1",
+      "status": "done",
+      "ride__request_id": ride_request_id
+    };
+
+    Map sendNotificationMap = {
+      "notification": notificationMap,
+      "data": dataMap,
+      "priority": "high",
+      "to": token
+    };
+    try {
+      var res = await http.post(
+        Uri.parse("https://fcm.googleapis.com/fcm/send"),
+        headers: headerMap,
+        body: jsonEncode(sendNotificationMap),
+      );
+    } catch (e) {
+      dev.log("exception " + e.toString());
+    }
   }
 }
 
