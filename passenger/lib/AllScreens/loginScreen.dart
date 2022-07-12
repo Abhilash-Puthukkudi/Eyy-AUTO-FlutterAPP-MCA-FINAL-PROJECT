@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:passenger/AllScreens/mainScreen.dart';
 import 'package:passenger/AllScreens/registrationScreen.dart';
+import 'package:passenger/AllScreens/resetpassword.dart';
 import 'package:passenger/allwidgets/progressWidget.dart';
 import 'package:passenger/assistance/assistanceMethods.dart';
 import 'package:passenger/functions/configMaps.dart';
@@ -134,6 +135,19 @@ class _loginScreenState extends State<loginScreen> {
                 },
                 child: Text(
                   "Do not have an Account? Register Here.",
+                  style: TextStyle(
+                      color: Colors.yellow,
+                      fontSize: 14.0,
+                      fontFamily: "Brand Bold"),
+                  textAlign: TextAlign.center,
+                )),
+            TextButton(
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, resetpassword.idScreen, (route) => false);
+                },
+                child: Text(
+                  "forgot password ?",
                   style: TextStyle(
                       color: Colors.yellow,
                       fontSize: 14.0,

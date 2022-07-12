@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:passenger/AllScreens/loginScreen.dart';
 import 'package:passenger/AllScreens/mainScreen.dart';
 import 'package:passenger/AllScreens/registrationScreen.dart';
+import 'package:passenger/AllScreens/resetpassword.dart';
 import 'package:passenger/DataHandler/appData.dart';
 import 'package:passenger/functions/permissions.dart';
 import 'package:provider/provider.dart';
@@ -49,7 +50,8 @@ class _MyAppState extends State<MyApp> {
         routes: {
           registrationScreen.idScreen: (context) => registrationScreen(),
           loginScreen.idScreen: (context) => loginScreen(),
-          mainScreen.idScreen: (context) => mainScreen()
+          mainScreen.idScreen: (context) => mainScreen(),
+          resetpassword.idScreen: ((context) => resetpassword())
         },
       ),
     );

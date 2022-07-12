@@ -14,6 +14,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:passenger/AllScreens/loginScreen.dart';
+import 'package:passenger/AllScreens/rattingScreen.dart';
 import 'package:passenger/AllScreens/searchScreen.dart';
 import 'package:passenger/DataHandler/appData.dart';
 import 'package:passenger/allwidgets/collectFareDialouge.dart';
@@ -186,6 +187,13 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
 
             d.log("show dialouge response : " + res.toString());
             if (res == "close") {
+              String driverID = "";
+              if (eventMap["driver_id"] != null) {
+                driverID = eventMap["driver_id"].toString();
+              }
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => RattingScreen(driverID: driverID)));
+
               rideRequestRef!.onDisconnect();
               rideRequestRef = null;
               rideStreamSubscription!.cancel();

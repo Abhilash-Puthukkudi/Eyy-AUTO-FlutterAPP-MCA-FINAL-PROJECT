@@ -18,3 +18,7 @@ String autoNumber = "";
 String autoDriverPhone = "";
 String autoDriverName = "";
 String rideStatusText = "Driver is Coming";
+
+double startCounter = 0.0;
+
+String title = "";
