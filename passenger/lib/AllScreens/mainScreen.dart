@@ -16,6 +16,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:passenger/AllScreens/loginScreen.dart';
 import 'package:passenger/AllScreens/searchScreen.dart';
 import 'package:passenger/DataHandler/appData.dart';
+import 'package:passenger/allwidgets/collectFareDialouge.dart';
 import 'package:passenger/allwidgets/noDriverAvilableDialouge.dart';
 import 'package:passenger/allwidgets/progressWidget.dart';
 import 'package:passenger/assistance/assistanceMethods.dart';
@@ -25,6 +26,7 @@ import 'package:passenger/functions/firebaseReferances.dart';
 import 'package:passenger/functions/validators.dart';
 import 'package:passenger/models/nearByAvilableDrivers.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class mainScreen extends StatefulWidget {
   const mainScreen({Key? key}) : super(key: key);
@@ -67,6 +69,7 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
   // calling userinfo function to get user information
 
   StreamSubscription? rideStreamSubscription;
+  bool isRequestingPositionDetails = false;
 
   @override
   void initState() {
@@ -109,7 +112,7 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
 
     rideRequestRef!.set(riderInfoMap);
 
-    rideStreamSubscription = rideRequestRef!.onValue.listen((event) {
+    rideStreamSubscription = rideRequestRef!.onValue.listen((event) async {
       if (event.snapshot.value == null) {
         return;
       } else {
@@ -118,6 +121,7 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
         if (eventMap["status"] != null) {
           setState(() {
             statusRide = eventMap["status"];
+            d.log(statusRide.toString());
           });
         }
         if (eventMap["auto_details"] != null) {
@@ -136,13 +140,112 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
             d.log(autoDriverPhone);
           });
         }
+        if (eventMap["driver_location"] != null) {
+          setState(() {
+            d.log("driverlocation block set t");
+            try {
+              d.log("driverlocation block set try block");
+              double driverLat =
+                  double.parse(eventMap["driver_location"]["latitude"]);
+              double driverLng =
+                  double.parse(eventMap["driver_location"]["longitude"]);
+
+              LatLng driverCurrentposition = LatLng(driverLat, driverLng);
+
+              d.log("value of sttausride : " + statusRide);
+
+              if (statusRide == "accepted") {
+                d.log("accepted block");
+                updateRideTimetoPickupLoc(driverCurrentposition);
+              } else if (statusRide == "onride") {
+                updateRideTimetoDropOffLoc(driverCurrentposition);
+              } else if (statusRide == "arrived") {
+                rideStatusText = "Driver has Arrived";
+              }
+            } catch (e) {
+              d.log("errors : " + e.toString());
+            }
+          });
+          d.log("dont know why");
+        }
+
         if (statusRide == "accepted") {
           displayDriverDetailsContainer();
+          Geofire.stopListener();
+          deleteGrofireMarkers();
+        }
+        if (statusRide == "ended") {
+          if (eventMap["fares"] != null) {
+            int fare = int.parse(eventMap["fares"].toString());
+
+            var res = await showDialog(
+                context: context,
+                builder: (BuildContext context) =>
+                    CollectFareDialog(paymentMethod: "cash", fareAmount: fare),
+                barrierDismissible: false);
+
+            d.log("show dialouge response : " + res.toString());
+            if (res == "close") {
+              rideRequestRef!.onDisconnect();
+              rideRequestRef = null;
+              rideStreamSubscription!.cancel();
+              rideStreamSubscription = null;
+              resetApp();
+            }
+          }
         }
       }
     });
   }
 // end of save ride request
+
+  void deleteGrofireMarkers() {
+    setState(() {});
+    markersSet
+        .removeWhere((element) => element.markerId.value.contains("driver"));
+  }
+
+  void updateRideTimetoPickupLoc(LatLng driverCurrentLocation) async {
+    d.log("ride function loade");
+    if (isRequestingPositionDetails == false) {
+      isRequestingPositionDetails = true;
+      var positionUserLatlng =
+          LatLng(currentPostiion!.latitude, currentPostiion!.longitude);
+
+      var details = await assistanceMethods.obtainPlaceDirectionDetails(
+          driverCurrentLocation, positionUserLatlng);
+      if (details == null) {
+        return;
+      }
+      d.log(rideStatusText);
+      setState(() {
+        rideStatusText =
+            "Driver is coming - " + details.durationText.toString();
+      });
+      isRequestingPositionDetails = false;
+    }
+  }
+
+  Future<void> updateRideTimetoDropOffLoc(LatLng driverCurrentLocation) async {
+    if (isRequestingPositionDetails == false) {
+      isRequestingPositionDetails = true;
+      var dropoff =
+          Provider.of<appData>(context, listen: false).dropOffLocation;
+      var dropOfUserLatlang =
+          LatLng(dropoff!.lattitude!.toDouble(), dropoff.longitude!.toDouble());
+      var details = await assistanceMethods.obtainPlaceDirectionDetails(
+          driverCurrentLocation, dropOfUserLatlang);
+      if (details == null) {
+        return;
+      }
+
+      setState(() {
+        rideStatusText =
+            "Going to Destination - " + details.durationText.toString();
+      });
+      isRequestingPositionDetails = false;
+    }
+  }
 
 // canselRideRequest
 
@@ -187,6 +290,13 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
       markersSet.clear();
       circlesSet.clear();
       polyLineCordinates.clear();
+
+      statusRide = "";
+      autoDriverName = "";
+      autoDriverPhone = "";
+      autoNumber = "";
+      rideStatusText = "Driver Is Coming";
+      driverDetailsContainerHeight = 0.0;
     });
 
     locateposition();
@@ -739,70 +849,110 @@ class _mainScreenState extends State<mainScreen> with TickerProviderStateMixin {
                           thickness: 2.0,
                         ),
                         SizedBox(
-                          height: 22.0,
+                          height: 40.0,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: 55.0,
-                                  width: 55.0,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          width: 2.0, color: Colors.black),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(26.0),
-                                      )),
-                                  child: Icon(Icons.call),
-                                ),
-                                SizedBox(
-                                  height: 10.0,
-                                ),
-                                Text("Call"),
-                              ],
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: 55.0,
-                                  width: 55.0,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          width: 2.0, color: Colors.black),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(26.0),
-                                      )),
-                                  child: Icon(Icons.list),
-                                ),
-                                SizedBox(
-                                  height: 10.0,
-                                ),
-                                Text("Details"),
-                              ],
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: 55.0,
-                                  width: 55.0,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          width: 2.0, color: Colors.black),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(26.0),
-                                      )),
-                                  child: Icon(Icons.close),
-                                ),
-                                SizedBox(
-                                  height: 10.0,
-                                ),
-                                Text("Cancel"),
-                              ],
+                            // Column(
+                            //   crossAxisAlignment: CrossAxisAlignment.center,
+                            //   children: [
+                            //     Container(
+                            //       height: 55.0,
+                            //       width: 55.0,
+                            //       decoration: BoxDecoration(
+                            //           border: Border.all(
+                            //               width: 2.0, color: Colors.black),
+                            //           borderRadius: BorderRadius.all(
+                            //             Radius.circular(26.0),
+                            //           )),
+                            //       child: Icon(Icons.call),
+                            //     ),
+                            //     SizedBox(
+                            //       height: 10.0,
+                            //     ),
+                            //     Text("Call"),
+                            //   ],
+                            // ),
+                            // Column(
+                            //   crossAxisAlignment: CrossAxisAlignment.center,
+                            //   children: [
+                            //     Container(
+                            //       height: 55.0,
+                            //       width: 55.0,
+                            //       decoration: BoxDecoration(
+                            //           border: Border.all(
+                            //               width: 2.0, color: Colors.black),
+                            //           borderRadius: BorderRadius.all(
+                            //             Radius.circular(26.0),
+                            //           )),
+                            //       child: Icon(Icons.list),
+                            //     ),
+                            //     SizedBox(
+                            //       height: 10.0,
+                            //     ),
+                            //     Text("Details"),
+                            //   ],
+                            // ),
+                            // Column(
+                            //   crossAxisAlignment: CrossAxisAlignment.center,
+                            //   children: [
+                            //     Container(
+                            //       height: 55.0,
+                            //       width: 55.0,
+                            //       decoration: BoxDecoration(
+                            //           border: Border.all(
+                            //               width: 2.0, color: Colors.black),
+                            //           borderRadius: BorderRadius.all(
+                            //             Radius.circular(26.0),
+                            //           )),
+                            //       child: Icon(Icons.close),
+                            //     ),
+                            //     SizedBox(
+                            //       height: 10.0,
+                            //     ),
+                            //     Text("Cancel"),
+                            //   ],
+                            // ),
+
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: ElevatedButton(
+                                  onPressed: () async {
+                                    try {
+                                      await launchUrl(Uri(
+                                          scheme: 'tel',
+                                          path: autoDriverPhone));
+                                    } catch (e) {
+                                      d.log(e.toString());
+                                    }
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Call Driver",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Icon(
+                                        Icons.call,
+                                        color: Colors.white,
+                                      )
+                                    ],
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                      primary: Colors.green,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 60, vertical: 15),
+                                      textStyle: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold))),
                             ),
                           ],
                         )
