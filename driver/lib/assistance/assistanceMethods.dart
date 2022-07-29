@@ -132,6 +132,30 @@ class assistanceMethods {
   }
 
   static void retriveHistoryInfo(context) {
+    //  getting rattings
+    driverRef
+        .child(currentFirebaseUSer!.uid)
+        .child("ratings")
+        .once()
+        .then((snapshot) {
+      if (snapshot.snapshot.value != null) {
+        String rattings = snapshot.snapshot.value.toString();
+        startCounter = double.parse(rattings);
+
+        if (startCounter <= 2) {
+          title = "very bad";
+        } else if (startCounter <= 3) {
+          title = "bad";
+        } else if (startCounter <= 4) {
+          title = "good";
+        } else if (startCounter < 5) {
+          title = "Very Good";
+        } else if (startCounter > 5) {
+          title = "Excellent";
+        }
+      }
+    });
+
     driverRef
         .child(currentFirebaseUSer!.uid)
         .child("earnings")

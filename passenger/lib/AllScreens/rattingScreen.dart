@@ -50,7 +50,7 @@ class _RattingScreenState extends State<RattingScreen> {
               SmoothStarRating(
                 rating: startCounter,
                 color: Colors.yellow,
-                allowHalfRating: false,
+                allowHalfRating: true,
                 starCount: 5,
                 size: 45,
                 onRatingChanged: (value) {

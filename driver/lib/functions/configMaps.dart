@@ -19,3 +19,4 @@ StreamSubscription<Position>? rideStreamSubscription;
 Position? currentPostiion;
 drivers? driversInformation;
 String? title;
+double startCounter = 0.0;
