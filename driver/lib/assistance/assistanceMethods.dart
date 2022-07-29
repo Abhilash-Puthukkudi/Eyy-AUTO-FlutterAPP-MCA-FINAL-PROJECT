@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:driver/functions/firebaseReferances.dart';
+import 'package:driver/models/history.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
@@ -10,6 +12,7 @@ import 'package:driver/assistance/requestAssistance.dart';
 import 'package:driver/functions/configMaps.dart';
 import 'package:driver/models/address.dart';
 import 'package:driver/models/directDetails.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../models/allUsers.dart';
@@ -126,6 +129,62 @@ class assistanceMethods {
     homeTabPageStreamSubscription!.resume();
     Geofire.setLocation(currentFirebaseUSer!.uid, currentPostiion!.latitude,
         currentPostiion!.longitude);
+  }
+
+  static void retriveHistoryInfo(context) {
+    driverRef
+        .child(currentFirebaseUSer!.uid)
+        .child("earnings")
+        .once()
+        .then((snapshot) {
+      if (snapshot.snapshot.value != null) {
+        String earnings = snapshot.snapshot.value.toString();
+        Provider.of<appData>(context, listen: false).updateEarnings(earnings);
+      }
+    });
+// retirve history
+    driverRef
+        .child(currentFirebaseUSer!.uid)
+        .child("history")
+        .once()
+        .then((snapshot) {
+      if (snapshot.snapshot.value != null) {
+        Map keys = snapshot.snapshot.value as Map;
+        int tripCounter = keys.length;
+        Provider.of<appData>(context, listen: false)
+            .updateTripsCounter(tripCounter);
+
+        List<String> triphistoryKeys = [];
+        keys.forEach((key, value) {
+          triphistoryKeys.add(key);
+        });
+        Provider.of<appData>(context, listen: false)
+            .updateTripsKeys(triphistoryKeys);
+        obtainTripHistoryData(context);
+      }
+    });
+  }
+
+  static void obtainTripHistoryData(context) {
+    var keys = Provider.of<appData>(context, listen: false).tripHistoryKeys;
+
+    for (String key in keys) {
+      newRideRequestRef.child(key).once().then((snapshot) {
+        if (snapshot.snapshot.value != null) {
+          var history = History.fromSnapshot(snapshot);
+          Provider.of<appData>(context, listen: false)
+              .updateTripHistoryData(history);
+        }
+      });
+    }
+  }
+
+  static String formatTripdate(String date) {
+    DateTime dateTime = DateTime.parse(date);
+
+    String formatedDate =
+        "${DateFormat.MMMd().format(dateTime)},${DateFormat.y().format(dateTime)} - ${DateFormat.jm().format(dateTime)}";
+    return formatedDate;
   }
 }
 

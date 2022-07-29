@@ -18,3 +18,4 @@ StreamSubscription<Position>? homeTabPageStreamSubscription;
 StreamSubscription<Position>? rideStreamSubscription;
 Position? currentPostiion;
 drivers? driversInformation;
+String? title;

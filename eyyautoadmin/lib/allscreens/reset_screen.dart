@@ -1,4 +1,5 @@
 import 'package:eyyautoadmin/allscreens/login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -16,6 +17,7 @@ class ResetPasswordscreen extends StatefulWidget {
 }
 
 class _ResetPasswordscreenState extends State<ResetPasswordscreen> {
+  TextEditingController emailcontroller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,8 +52,8 @@ class _ResetPasswordscreenState extends State<ResetPasswordscreen> {
                   const SizedBox(height: 1.0),
                   Container(
                     width: 600,
-                    child: const TextField(
-                      // controller: usernameController,
+                    child: TextField(
+                      controller: emailcontroller,
                       style: TextStyle(color: Colors.yellow, fontSize: 18),
                       textAlign: TextAlign.center,
                       keyboardType: TextInputType.emailAddress,
@@ -80,10 +82,16 @@ class _ResetPasswordscreenState extends State<ResetPasswordscreen> {
                                       side: const BorderSide(
                                           color:
                                               Color.fromARGB(255, 8, 7, 7))))),
-                      onPressed: () {
-                        // if (usernameController.text.isEmpty) {
-                        //   redMessenger(context, "Enter Username  to login!");
-                        // } else if (passwordController.text.isEmpty) {
+                      onPressed: () async {
+                        if (emailcontroller.text.isEmpty) {
+                          redMessenger(context, "Enter Username  to login!");
+                        } else {
+                          try {
+                            await FirebaseAuth.instance.sendPasswordResetEmail(
+                                email: emailcontroller.text.toString());
+                          } catch (e) {}
+                        }
+                        // else if (passwordController.text.isEmpty) {
                         //   redMessenger(context, "Enter Password to login!");
                         // } else {
                         // String username = usernameController.text.trim();

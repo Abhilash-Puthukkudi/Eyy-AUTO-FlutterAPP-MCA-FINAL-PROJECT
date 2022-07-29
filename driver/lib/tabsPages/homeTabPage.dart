@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:driver/assistance/assistanceMethods.dart';
 import 'package:driver/functions/validators.dart';
 import 'package:driver/main.dart';
 import 'package:driver/models/drivers.dart';
@@ -69,7 +70,8 @@ class _homeTabState extends State<homeTab> {
     currentFirebaseUSer = await FirebaseAuth.instance.currentUser;
     driverRef.child(currentFirebaseUSer!.uid).once().then((datasnapshot) {
       if (datasnapshot.snapshot.value != null) {
-        log("[homepagetap] getdriverinfo() : "+datasnapshot.snapshot.value.toString());
+        log("[homepagetap] getdriverinfo() : " +
+            datasnapshot.snapshot.value.toString());
         driversInformation = drivers.fromSnapshot(datasnapshot.snapshot);
       }
     });
@@ -77,6 +79,8 @@ class _homeTabState extends State<homeTab> {
     homeScreenContext = context;
     pushNotficationService.initialize(context);
     pushNotficationService.getToken();
+
+    assistanceMethods.retriveHistoryInfo(context);
   }
 
   @override
